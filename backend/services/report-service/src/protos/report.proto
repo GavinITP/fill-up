@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package report;
+
+service ReportService {
+    rpc GetReports(Empty) returns (ReportList) {}
+    rpc GetReport(ReportId) returns (Report) {}
+    rpc CreateReport(Report) returns (Report) {}
+    rpc UpdateReport(Report) returns (Report) {}
+    rpc DeleteReport(ReportId) returns (Empty) {}
+    rpc MarkReport(ReportCompletion) returns (Report) {}
+}
+
+message Empty {}
+
+message Report {
+    optional string id = 1;
+    string name = 2;
+    string description = 3;
+    optional string created_at = 4;
+    optional bool completed = 5;
+    optional string completed_at = 6;
+}
+
+message ReportId {
+    string id = 1;
+}
+
+message ReportList {
+    repeated Report reports = 1;
+}
+
+message ReportCompletion {
+    string id = 1;
+    bool completed = 2;
+}
