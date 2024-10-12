@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Roboto } from "next/font/google";
 import "./globals.css";
+import NavBar from "@/components/NavBar";
 
 export const metadata: Metadata = {
   title: "Fill Up",
   description: "",
 };
 
-const inter = Inter({
+const roboto = Roboto({
+  weight: "400",
   subsets: ["latin"],
-  variable: "--font-inter",
 });
 
 interface Props {
@@ -19,7 +20,10 @@ interface Props {
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans`}>{children}</body>
+      <body className={`${roboto.className}`}>
+        <NavBar />
+        {children}
+      </body>
     </html>
   );
 }
