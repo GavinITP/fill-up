@@ -4,6 +4,7 @@ import { useState } from "react";
 import BaseCardWithButton from "../BaseCardWithButton";
 import Button, { ButtonProps } from "../Button";
 import BaseModal from "../BaseModal";
+import BaseModalWithInput from "../BaseModalWithInput";
 
 export default function ReportCard(props: {
   waterStationName: string;
@@ -59,92 +60,66 @@ export default function ReportCard(props: {
           </span>
         </div>
       </BaseCardWithButton>
-      <BaseModal
+      <BaseModalWithInput
+        color="blue"
+        title={"ข้อร้องเรียน"}
+        instruction={`ปัญหาที่พบเกี่ยวกับตู้กดน้ำ ${props.waterStationName}`}
+        textInput={props.details}
+        disabled={true}
         isOpened={isDetailOpened}
         onClose={() => {
           setIsDetailOpened(false);
         }}
       >
-        <div className="flex h-fit w-[40vw] flex-col items-start justify-between gap-4 p-6">
-          <h2 className="text-lightblue-900 text-3xl font-bold">
-            ข้อร้องเรียน
-          </h2>
-          <div className="flex w-full flex-col gap-1">
-            <span className="text-base font-normal text-zinc-500">
-              ปัญหาที่พบเกี่ยวกับตู้กดน้ำ {props.waterStationName}
-            </span>
-            <textarea
-              id="message"
-              rows={6}
-              className="w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-base text-black"
-              disabled
-            >
-              {props.details}
-            </textarea>
-          </div>
-          <div className="mt-4 flex w-full flex-row justify-end">
-            <div className="w-2/12">
-              <Button
-                color="blue"
-                label="ปิด"
-                onClick={() => {
-                  setIsDetailOpened(false);
-                }}
-                isBold={true}
-              />
-            </div>
-          </div>
+        <div className="w-2/12">
+          <Button
+            color="blue"
+            label="ปิด"
+            onClick={() => {
+              setIsDetailOpened(false);
+            }}
+            isBold={true}
+          />
         </div>
-      </BaseModal>
-      <BaseModal
+      </BaseModalWithInput>
+      <BaseModalWithInput
+        color="red"
+        title={"บันทึกการตรวจสอบ"}
+        instruction={`ระบุปัญหาที่ตรวจพบเกี่ยวกับตู้กดน้ำ ${props.waterStationName}`}
+        textInput={reportComment}
+        disabled={false}
         isOpened={isReportOpened}
         onClose={() => {
           setIsReportOpened(false);
         }}
+        onChange={(e) => setReportComment(e.target.value)}
       >
-        <div className="flex h-fit w-[40vw] flex-col items-start justify-between gap-4 p-6">
-          <h2 className="text-newred-500 text-3xl font-bold">
-            บันทึกการตรวจสอบ
-          </h2>
-          <div className="flex w-full flex-col gap-1">
-            <span className="text-base font-normal text-zinc-500">
-              ระบุปัญหาที่ตรวจพบเกี่ยวกับตู้กดน้ำ {props.waterStationName}
-            </span>
-            <textarea
-              id="message"
-              rows={6}
-              className="focus:outline-newgray-400 w-full rounded-lg border border-gray-300 p-2.5 text-base text-black"
-              value={reportComment}
-              onChange={(e) => setReportComment(e.target.value)}
+        <>
+          <div className="w-1/6">
+            <Button
+              color="gray"
+              label="ยกเลิก"
+              onClick={() => {
+                setIsReportOpened(false);
+                setReportComment("");
+              }}
+              isBold={true}
             />
           </div>
-          <div className="mt-4 flex w-full flex-row justify-end gap-2">
-            <div className="w-1/6">
-              <Button
-                color="gray"
-                label="ยกเลิก"
-                onClick={() => {
-                  setIsReportOpened(false);
-                  setReportComment("");
-                }}
-                isBold={true}
-              />
-            </div>
-            <div className="w-3/12">
-              <Button
-                color="red"
-                label="จัดการปัญหา"
-                onClick={() => {
-                  setIsReportOpened(false);
-                  alert(reportComment);
-                  setReportComment("");
-                }}
-                isBold={true}
-              />
-            </div>
+          <div className="w-3/12">
+            <Button
+              color="red"
+              label="จัดการปัญหา"
+              onClick={() => {
+                setIsReportOpened(false);
+                alert(reportComment);
+                setReportComment("");
+              }}
+              isBold={true}
+            />
           </div>
-        </div>
-      </BaseModal>
+        </>
+      </BaseModalWithInput>
     </>
   );
 }
