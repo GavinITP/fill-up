@@ -114,6 +114,7 @@ export default function ReportCard(props: {
               id="message"
               rows={6}
               className="focus:outline-newgray-400 w-full rounded-lg border border-gray-300 p-2.5 text-base text-black"
+              value={reportComment}
               onChange={(e) => setReportComment(e.target.value)}
             />
           </div>
@@ -124,6 +125,7 @@ export default function ReportCard(props: {
                 label="ยกเลิก"
                 onClick={() => {
                   setIsReportOpened(false);
+                  setReportComment("");
                 }}
                 isBold={true}
               />
@@ -135,6 +137,7 @@ export default function ReportCard(props: {
                 onClick={() => {
                   setIsReportOpened(false);
                   alert(reportComment);
+                  setReportComment("");
                 }}
                 isBold={true}
               />
