@@ -11,6 +11,9 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-inter)"],
       },
+      colors: {
+        'lightblue-900': '#01579B'
+      }
     },
   },
   plugins: [],
