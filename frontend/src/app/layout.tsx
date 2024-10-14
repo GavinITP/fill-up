@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 const notoSansThai = Noto_Sans_Thai({
-  weight: "400",
+  weight: ["400", "500", "700", "800"],
   subsets: ["latin", "thai"],
 });
 

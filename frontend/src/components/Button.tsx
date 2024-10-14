@@ -1,14 +1,16 @@
+export interface ButtonProps {
+  color: string;
+  label: string;
+  onClick: () => void;
+  isBold?: boolean;
+}
+
 export default function Button({
   color,
   label,
   onClick,
   isBold = false,
-}: {
-  color: string;
-  label: string;
-  onClick: () => void;
-  isBold?: boolean;
-}) {
+}: ButtonProps) {
   let colorStyle: string = "";
 
   if (color === "red") colorStyle = "bg-newred-500 text-white";

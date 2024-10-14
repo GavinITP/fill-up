@@ -11,7 +11,7 @@ export default function AdminNavigateSegment() {
     return (
       <Link
         href={link}
-        className="hover:bg-lightblue-200 hover:text-lightblue-900 h-full w-fit content-center bg-none px-5 text-white"
+        className="hover:bg-lightblue-200 hover:text-lightblue-900 h-full w-fit content-center bg-none px-5 text-lg text-white"
       >
         {title}
       </Link>

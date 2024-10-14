@@ -51,7 +51,7 @@ export default function NavBar() {
           onClick={() => setIsMenuShow(!isMenuShow)}
         >
           <span
-            className={`text-5xl ${isAdmin ? "text-white" : "text-zinc-500"}`}
+            className={`text-5xl ${isAdmin ? "text-white" : "text-zinc-400"}`}
           >
             <AccountCircleRoundedIcon fontSize="inherit" />
           </span>
@@ -64,8 +64,8 @@ export default function NavBar() {
             </span>
           </div>
           {isMenuShow && (
-            <div className="absolute right-0 top-[5rem] flex h-fit w-fit min-w-40 flex-col items-center justify-center overflow-hidden rounded-lg bg-white text-base shadow-lg">
-              {isWaterStationOwner && (
+            <div className="border-newgray-200 absolute right-0 top-[5rem] flex h-fit w-fit min-w-40 flex-col items-center justify-center divide-y overflow-hidden rounded-lg border bg-white text-base shadow-lg">
+              {!isWaterStationOwner && (
                 <Link
                   href="/dashboard"
                   className="hover:bg-newgray-200 w-full p-3 text-center"
@@ -73,7 +73,6 @@ export default function NavBar() {
                   Dashboard
                 </Link>
               )}
-              {isWaterStationOwner && <hr className="w-4/5" />}
               <button className="hover:bg-newgray-200 w-full p-3">
                 ออกจากระบบ
               </button>
