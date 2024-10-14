@@ -44,7 +44,7 @@ export default function UserCard(props: {
 
   const detail = (key: string, value: string) => {
     return (
-      <div className="flex flex-row gap-2 text-lg text-zinc-400">
+      <div className="flex flex-row gap-2 text-lg text-zinc-500">
         <span className="font-bold">{key}:</span>
         <span className="font-normal">{value}</span>
       </div>
