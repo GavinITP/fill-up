@@ -11,13 +11,13 @@ export default function Button({
 }) {
   let colorStyle: string = "";
 
-  if (color === "red") colorStyle = "bg-red-500 text-white";
-  else if (color === "yellow") colorStyle = "bg-amber-500 text-white";
-  else if (color === "green") colorStyle = "bg-lime-500 text-white";
-  else if (color === "blue") colorStyle = "bg-sky-600 text-white";
-  else if (color === "gray") colorStyle = "bg-zinc-400 text-white";
+  if (color === "red") colorStyle = "bg-newred-500 text-white";
+  else if (color === "yellow") colorStyle = "bg-newyellow-800 text-white";
+  else if (color === "green") colorStyle = "bg-lightgreen-500 text-white";
+  else if (color === "blue") colorStyle = "bg-lightblue-700 text-white";
+  else if (color === "gray") colorStyle = "bg-newgray-400 text-white";
   else if (color === "blue-line")
-    colorStyle = "border-2 border-sky-600 bg-white text-sky-500";
+    colorStyle = "border-2 border-lightblue-500 bg-white text-lightblue-500";
 
   const fontWeight: string = isBold ? "font-bold" : "font-normal";
 

@@ -22,7 +22,7 @@ export default function TextBox({
       {title && <h6 className="text-lg font-normal text-black">{title}</h6>}
       <input
         type="text"
-        className="w-full rounded-lg border border-gray-300 p-3 focus:outline-sky-500"
+        className="focus:outline-lightblue-200 w-full rounded-lg border border-gray-300 p-3"
         placeholder={placeholder}
         onChange={handleChange}
         disabled={disabled}

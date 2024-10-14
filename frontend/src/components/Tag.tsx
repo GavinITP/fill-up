@@ -7,10 +7,12 @@ export default function Tag(props: {
 }) {
   let colorString: string = "";
 
-  if (props.color === "red") colorString = "bg-red-300 text-red-800";
-  else if (props.color === "green") colorString = "bg-[#C5E1A5] text-[#33691E]";
-  else if (props.color === "blue") colorString = "bg-sky-300 text-sky-700";
-  else if (props.color === "gray") colorString = "bg-gray-200 text-black";
+  if (props.color === "red") colorString = "bg-newred-200 text-newred-900";
+  else if (props.color === "green")
+    colorString = "bg-lightgreen-200 text-lightgreen-900";
+  else if (props.color === "blue")
+    colorString = "bg-lightblue-200 text-lightblue-900";
+  else if (props.color === "gray") colorString = "bg-newgray-200 text-black";
 
   return (
     <div
@@ -19,7 +21,7 @@ export default function Tag(props: {
       {props.label}
       {props.action && (
         <button
-          className="flex items-center justify-center rounded-full bg-zinc-400 p-[0.1rem] text-gray-200"
+          className="text-newgray-200 flex items-center justify-center rounded-full bg-zinc-400 p-[0.1rem]"
           onClick={() => {
             if (props.action) props.action();
           }}
