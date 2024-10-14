@@ -9,6 +9,7 @@ import WaterStationInfoSection, {
 import defaultPic from "../../../public/waterStationPic.svg";
 import Image from "next/image";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import WaterStationInfoModal from "../WaterStationInfoModal";
 
 export default function WaterStationReportCard(props: {
   waterStation: WaterStationDetailProp;
@@ -60,6 +61,11 @@ export default function WaterStationReportCard(props: {
           </div>
         </div>
       </BaseCardWithButton>
+      <WaterStationInfoModal
+        waterStationInfo={props.waterStation}
+        isOpened={isDetailOpened}
+        onClose={() => setIsDetailOpened(false)}
+      />
     </>
   );
 }

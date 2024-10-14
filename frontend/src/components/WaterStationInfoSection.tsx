@@ -10,6 +10,7 @@ export interface WaterStationDetailProp {
   isFree: boolean;
   waterTemperature: string[];
   maintenanceDetail: string;
+  date: string;
 }
 
 export default function WaterStationInfoSection({
@@ -18,7 +19,6 @@ export default function WaterStationInfoSection({
   permissionList,
   isFree,
   waterTemperature,
-  maintenanceDetail,
 }: WaterStationDetailProp) {
   return (
     <div className="flex w-full flex-col items-start justify-start gap-6 px-4 py-6">

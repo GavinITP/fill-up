@@ -10,6 +10,7 @@ export default function Page() {
       waterTemperature: ["ร้อน", "เย็น", "อุณหภูมิห้อง"],
       maintenanceDetail: "details is here",
       isFree: true,
+      date: "2020-2-3",
     },
   ];
 
