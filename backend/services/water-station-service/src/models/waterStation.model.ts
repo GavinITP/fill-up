@@ -27,7 +27,7 @@ const WaterStationSchema = new mongoose.Schema({
     },
     waterTemperature: {
         type: [String],
-        enum: ["hot", "cold", "room temperature"],
+        enum: ["ร้อน", "เย็น", "อุณหภูมิห้อง"],
         required: true,
     },
     maintenanceDetails: {
