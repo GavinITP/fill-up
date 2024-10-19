@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, query } from "express";
 import WaterStation from "../models/waterStation.model";
 
 const getWaterStations = async (
@@ -24,14 +24,23 @@ const getWaterStations = async (
     if (name)
         filter.name = { $regex: name, $options: 'i' };
 
+
+    if (latitude && longitude) {
+        const latCenter = Number(latitude);
+        const longCenter = Number(longitude);
+        filter.location = {
+            $geoWithin: {
+                $centerSphere: [
+                    [longCenter, latCenter], // [longitude, latitude]
+                    2 / 6378.1   // radius in radians (2 km)
+                ]
+            }
+        }
+
+    }
+
     if (address)
         filter.address = { $regex: address, $options: 'i' };
-
-    if (latitude)
-        filter.latitude = Number(latitude);
-
-    if (longitude)
-        filter.longitude = Number(longitude);
 
     if (permission)
         filter.permission = { $in: (permission as string).split(',') };
@@ -120,6 +129,10 @@ const createWaterStation = async (
     next: NextFunction
 ) => {
     try {
+        req.body.location = {
+            type: 'Point',
+            coordinates: [req.body.longitude, req.body.latitude,]
+        }
         const createdWaterStation = await WaterStation.create(req.body);
         res.status(201).json({ success: true, data: createdWaterStation });
     } catch (err) {

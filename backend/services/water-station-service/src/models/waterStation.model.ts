@@ -5,13 +5,17 @@ const WaterStationSchema = new mongoose.Schema({
         type: String,
         default: 'Water station'
     },
-    latitude: {
-        type: Number,
-        required: true,
-    },
-    longitude: {
-        type: Number,
-        required: true,
+    location: {
+        type: {
+            type: String,
+            enum: ['Point'],
+            required: true,
+            default: 'Point'
+        },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
     },
     address: {
         type: String,
@@ -57,6 +61,8 @@ const WaterStationSchema = new mongoose.Schema({
         default: Date.now,
     },
 });
+
+WaterStationSchema.index({ location: '2dsphere' });
 
 const WaterStation = mongoose.model("WaterStation", WaterStationSchema);
 
