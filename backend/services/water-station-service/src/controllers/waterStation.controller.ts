@@ -224,9 +224,9 @@ const deleteWaterStation = async (
 
         await waterStation.deleteOne();
 
-        res.status(200).json({ sucess: true, data: {} });
+        res.status(200).json({ success: true, data: {} });
     } catch (err) {
-        res.status(400).json({ sucess: false });
+        res.status(400).json({ success: false });
     }
 };
 
