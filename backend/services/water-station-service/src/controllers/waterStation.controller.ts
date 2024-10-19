@@ -77,25 +77,29 @@ const getWaterStations = async (
 
     try {
         const total = await WaterStation.countDocuments();
-        query = query.skip(startIndex).limit(limit);
-
-        const waterStations = await query;
 
         //Pagination result
         const pagination = { next: {}, prev: {} };
-        if (endIndex < total) {
-            pagination.next = {
-                page: page + 1,
-                limit,
-            };
+
+        if (limit !== -1) {
+            query = query.skip(startIndex).limit(limit);
+
+            if (endIndex < total) {
+                pagination.next = {
+                    page: page + 1,
+                    limit,
+                };
+            }
+
+            if (startIndex > 0) {
+                pagination.prev = {
+                    page: page - 1,
+                    limit,
+                };
+            }
         }
 
-        if (startIndex > 0) {
-            pagination.prev = {
-                page: page - 1,
-                limit,
-            };
-        }
+        const waterStations = await query;
 
         res.status(200).json({
             success: true,
