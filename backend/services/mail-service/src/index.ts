@@ -1,46 +1,83 @@
 #!/usr/bin/env node
 
-import amqp, { Connection, Channel, Message } from 'amqplib/callback_api';
+import amqp from 'amqplib/callback_api';
+import { sendMail } from './MailerService';
+import dotenv from 'dotenv';
 
-const queue: string = process.argv.slice(2)[0];
+dotenv.config();
 
-if (!queue) {
-    console.error('Queue name must be provided as an argument');
-    process.exit(1);
-}
-
-amqp.connect('amqp://localhost', function (error0: any, connection: Connection) {
+amqp.connect('amqp://localhost', (error0, connection) => {
     if (error0) {
-        throw error0;
+        throw new Error(`Connection error: ${error0.message}`);
     }
 
-    connection.createChannel(function (error1: any, channel: Channel) {
+    connection.createChannel((error1, channel) => {
         if (error1) {
-            throw error1;
+            throw new Error(`Channel creation error: ${error1.message}`);
         }
 
-        channel.assertQueue(queue, {
+        const verifyAccountQueue = 'verify-account';
+        const waterStationApprovalQueue = 'water-station-approval';
+
+        channel.assertQueue(verifyAccountQueue, {
             durable: true
         });
 
-        channel.prefetch(1);
-
-        console.log(` [*] Waiting for messages in ${queue}. To exit press CTRL+C`);
-
-        channel.consume(queue, function (msg: Message | null) {
-            if (msg !== null) {
-                const secs: number = 10;
-                const messageContent: string = msg.content.toString();
-
-                console.log(` [x] Received ${messageContent}`);
-
-                setTimeout(() => {
-                    console.log(' [x] Done');
-                    channel.ack(msg);
-                }, secs * 1000);
-            }
-        }, {
-            noAck: false
+        channel.assertQueue(waterStationApprovalQueue, {
+            durable: true
         });
+
+        channel.consume(verifyAccountQueue, (msg) => {
+            if (msg !== null) {
+                console.log(` [x] Received message in ${verifyAccountQueue}: ${msg.content.toString()}`);
+                processEmail(msg, verifyAccountQueue);
+            }
+        }, { noAck: false });
+
+        channel.consume(waterStationApprovalQueue, (msg) => {
+            if (msg !== null) {
+                console.log(` [x] Received message in ${waterStationApprovalQueue}: ${msg.content.toString()}`);
+                processEmail(msg, waterStationApprovalQueue);
+            }
+        }, { noAck: false });
+
+        const processEmail = async (msg: amqp.Message, queueName: string) => {
+            try {
+                console.log(msg.content.toString());
+                const messageContent = JSON.parse(msg.content.toString());
+
+                const from = process.env.MAIL_USERNAME as string;
+                const to = messageContent.email;
+                let subject = '';
+                let content = '';
+
+                if (queueName === verifyAccountQueue) {
+                    subject = 'Fill Up: Account Verification';
+                    content = `
+                        Hello ${messageContent.name},<br/><br/>
+                        Thank you for joining Fill Up! To activate your account and start exploring, please click the verification link below:<br/>
+                        [Link for verification: user id ${messageContent.id}]<br/><br/>
+                        Best Regards,<br/>
+                        Fill Up Team`;
+                } else if (queueName === waterStationApprovalQueue) {
+                    subject = 'Fill Up: Water Station Approval';
+                    content = `
+                        Hello ${messageContent.name},<br/><br/>
+                        We are writing to inform you about the approval status of your water station application.<br/><br/>
+                        Your water station ${messageContent.waterStationName} has been approved.<br/>
+                        You can now start serving water to the community.<br/><br/>
+                        Best Regards,<br/>
+                        Fill Up Team`;
+                }
+
+                await sendMail(from, to, subject, content);
+                console.log(` [x] Email sent to ${to}`);
+                channel.ack(msg);
+
+            } catch (error) {
+                console.error('Error processing message or sending email:', error);
+                channel.reject(msg, false);
+            }
+        };
     });
 });
