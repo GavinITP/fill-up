@@ -4,6 +4,7 @@ import Tag from "./Tag";
 import TemperatureTag from "./TemperatureTag";
 
 export interface WaterStationDetailProp {
+  id?: string;
   name: string;
   address: string;
   permissionList: string[];
@@ -11,6 +12,7 @@ export interface WaterStationDetailProp {
   waterTemperature: string[];
   maintenanceDetail: string;
   date: string;
+  approvalStatus?: string;
 }
 
 export default function WaterStationInfoSection({
