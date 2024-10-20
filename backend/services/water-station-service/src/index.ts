@@ -38,7 +38,7 @@ app.use(limiter);
 app.use(hpp());
 
 //mount routers
-app.use("/api/v1/water-stations", waterStationRouter);
+app.use("/", waterStationRouter);
 
 //Start Server
 const PORT = process.env.PORT || 5000;
