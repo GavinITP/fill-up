@@ -1,18 +1,28 @@
+"use client";
+
+import { WaterStationService } from "@/app/water-station/services/WaterStaionService";
 import WaterStationReportCard from "@/components/admin/WaterStationReportCard";
 import { WaterStationDetailProp } from "@/components/WaterStationInfoSection";
+import { useEffect, useState } from "react";
 
 export default function Page() {
-  const waterstationList: WaterStationDetailProp[] = [
-    {
-      name: "Roseheart's water station",
-      address: "121/1 Heartslabyul Dorm, Night Raven College",
-      permissionList: ["Heartslabyul's student", "yuu"],
-      waterTemperature: ["ร้อน", "เย็น", "อุณหภูมิห้อง"],
-      maintenanceDetail: "details is here",
-      isFree: true,
-      date: "2020-2-3",
-    },
-  ];
+  const [waterstationList, setWaterStationList] = useState<WaterStationDetailProp[]>([])
+
+  useEffect(() => {
+    const fetchPendingWaterStations = async () => {
+      const response = await WaterStationService.getPendingWaterStations()
+      if (response == null) {
+        return
+      }
+      if (response.isSuccess) {
+        console.log(response.message)
+        setWaterStationList(response.message)
+      } else {
+        console.error(response.message)
+      }
+    }
+    fetchPendingWaterStations()
+  }, [])
 
   return (
     <div className="flex w-full flex-col items-center justify-start gap-20 px-36 py-16">

@@ -23,7 +23,7 @@ export default function WaterStationForm({
     const [address, setAddress] = useState("");
     const [latitude, setLatitude] = useState("");
     const [longitude, setLongitude] = useState("");
-    const [isFree, setIsFree] = useState(null);
+    const [isFree, setIsFree] = useState<boolean | null>(null);
     const [permission, setPermission] = useState<string[]>([]);
     const [maintenanceDetails, setMaintenanceDetails] = useState("");
     const [isHot, setIsHot] = useState(false);

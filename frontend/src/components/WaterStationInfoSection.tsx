@@ -7,10 +7,10 @@ export interface WaterStationDetailProp {
   id?: string;
   name: string;
   address: string;
-  permissionList: string[];
+  permission: string[];
   isFree: boolean;
   waterTemperature: string[];
-  maintenanceDetail: string;
+  maintenanceDetails: string;
   date: string;
   approvalStatus?: string;
 }
@@ -18,7 +18,7 @@ export interface WaterStationDetailProp {
 export default function WaterStationInfoSection({
   name,
   address,
-  permissionList,
+  permission,
   isFree,
   waterTemperature,
 }: WaterStationDetailProp) {
@@ -45,7 +45,7 @@ export default function WaterStationInfoSection({
           ผู้ที่ได้รับอนุญาต:
         </h2>
         <div className="flex flex-row gap-2">
-          {permissionList.map((permission, index) => {
+          {permission.map((permission, index) => {
             return <Tag key={index} color="gray" label={permission} />;
           })}
         </div>

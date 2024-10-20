@@ -58,7 +58,7 @@ export default function WaterStationInfoModal(props: {
         {info(
           "ผู้ที่ได้รับอนุญาต",
           <div className="flex flex-row gap-2">
-            {props.waterStationInfo.permissionList.map((permission, index) => {
+            {props.waterStationInfo.permission.map((permission, index) => {
               return <Tag key={index} color="gray" label={permission} />;
             })}
           </div>,
@@ -66,7 +66,7 @@ export default function WaterStationInfoModal(props: {
         )}
         {info(
           "รายละเอียดการบำรุงรักษา",
-          props.waterStationInfo.maintenanceDetail,
+          props.waterStationInfo.maintenanceDetails,
           "col",
         )}
 
