@@ -7,19 +7,23 @@ import TagAdder from "./TagAdder";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { grey } from "@mui/material/colors";
 import Link from "next/link";
+import { WaterStationService } from "@/app/water-station/services/WaterStaionService";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 interface WaterStationFormProps {
     isEdit?: boolean;
+    router: AppRouterInstance;
 }
 
 export default function WaterStationForm({
-    isEdit = false
+    isEdit = false,
+    router
 }: WaterStationFormProps) {
     const [name, setName] = useState("");
     const [address, setAddress] = useState("");
     const [latitude, setLatitude] = useState("");
     const [longitude, setLongitude] = useState("");
-    const [isFree, setIsFree] = useState(true);
+    const [isFree, setIsFree] = useState(null);
     const [permission, setPermission] = useState<string[]>([]);
     const [maintenanceDetails, setMaintenanceDetails] = useState("");
     const [isHot, setIsHot] = useState(false);
@@ -34,8 +38,28 @@ export default function WaterStationForm({
         ];
     }
 
-    const register = () => {
-        alert(name + address + latitude + longitude + convertWaterTemperature() + isFree + permission + maintenanceDetails);
+    const register = async () => {
+        const waterTemperature = convertWaterTemperature();
+        if (!(name && address && latitude && longitude && waterTemperature.length && permission.length && maintenanceDetails && isFree !== null)) {
+            alert("Please fill all required fields")
+            return
+        }
+        const data = await WaterStationService.createWaterStation({
+            name,
+            address,
+            latitude: parseFloat(latitude),
+            longitude: parseFloat(longitude),
+            waterTemperature,
+            isFree,
+            permission,
+            maintenanceDetails,
+            owner: "1234"
+        })
+        if (!data.isSuccess) {
+            return
+        }
+        alert("Successfully registered")
+        router.push(`/dashboard/`);
     };
 
     const edit = () => {
@@ -68,6 +92,9 @@ export default function WaterStationForm({
                         setInputValue={setLatitude}
                         title="ละติจูด"
                         placeholder="กรุณากรอกละติจูด"
+                        isNumber={true}
+                        numberMin={-90}
+                        numberMax={90}
                     />
                 </div>
                 <div className="grid col-span-3">
@@ -75,6 +102,9 @@ export default function WaterStationForm({
                         setInputValue={setLongitude}
                         title="ลองจิจูด"
                         placeholder="กรุณากรอกลองจิจูด"
+                        isNumber={true}
+                        numberMin={-180}
+                        numberMax={180}
                     />
                 </div>
             </div>

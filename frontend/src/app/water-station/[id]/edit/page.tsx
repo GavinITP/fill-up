@@ -1,7 +1,12 @@
+"use client"
+
 import WaterStationForm from "@/components/WaterStationForm";
+import { useRouter } from 'next/navigation'
 import { Breadcrumbs, Link } from "@mui/material";
 
 export default function Page() {
+    const router = useRouter();
+
     const breadcrumbs = [
         <Link
             underline="hover"
@@ -27,7 +32,7 @@ export default function Page() {
             <h1 className="text-lightblue-900 text-3xl font-bold">
                 แก้ไขข้อมูลสถานีเติมน้ำ
             </h1>
-            <WaterStationForm isEdit={true} />
+            <WaterStationForm isEdit={true} router={router} />
         </div>
     );
 }
