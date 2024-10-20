@@ -16,59 +16,33 @@ amqp.connect('amqp://localhost', (error0, connection) => {
             throw new Error(`Channel creation error: ${error1.message}`);
         }
 
-        const verifyAccountQueue = 'verify-account';
         const waterStationApprovalQueue = 'water-station-approval';
-
-        channel.assertQueue(verifyAccountQueue, {
-            durable: true
-        });
 
         channel.assertQueue(waterStationApprovalQueue, {
             durable: true
         });
 
-        channel.consume(verifyAccountQueue, (msg) => {
-            if (msg !== null) {
-                console.log(` [x] Received message in ${verifyAccountQueue}: ${msg.content.toString()}`);
-                processEmail(msg, verifyAccountQueue);
-            }
-        }, { noAck: false });
-
         channel.consume(waterStationApprovalQueue, (msg) => {
             if (msg !== null) {
                 console.log(` [x] Received message in ${waterStationApprovalQueue}: ${msg.content.toString()}`);
-                processEmail(msg, waterStationApprovalQueue);
+                processEmail(msg);
             }
         }, { noAck: false });
 
-        const processEmail = async (msg: amqp.Message, queueName: string) => {
+        const processEmail = async (msg: amqp.Message) => {
             try {
                 console.log(msg.content.toString());
                 const messageContent = JSON.parse(msg.content.toString());
 
                 const from = process.env.MAIL_USERNAME as string;
                 const to = messageContent.email;
-                let subject = '';
-                let content = '';
-
-                if (queueName === verifyAccountQueue) {
-                    subject = 'Fill Up: Account Verification';
-                    content = `
-                        Hello ${messageContent.name},<br/><br/>
-                        Thank you for joining Fill Up! To activate your account and start exploring, please click the verification link below:<br/>
-                        [Link for verification: user id ${messageContent.id}]<br/><br/>
-                        Best Regards,<br/>
-                        Fill Up Team`;
-                } else if (queueName === waterStationApprovalQueue) {
-                    subject = 'Fill Up: Water Station Approval';
-                    content = `
+                const subject = 'Fill Up: Water Station Approval';
+                const content = `
                         Hello ${messageContent.name},<br/><br/>
                         We are writing to inform you about the approval status of your water station application.<br/><br/>
-                        Your water station ${messageContent.waterStationName} has been approved.<br/>
-                        You can now start serving water to the community.<br/><br/>
+                        Your water station ${messageContent.waterStationName} has been ${messageContent.waterStationStatus}.<br/><br/>
                         Best Regards,<br/>
                         Fill Up Team`;
-                }
 
                 await sendMail(from, to, subject, content);
                 console.log(` [x] Email sent to ${to}`);
