@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import WaterStation from "../models/waterStation.model";
+import { sendMessageToQueue } from '../../../mail-service/src/PublisherService';
 
 const getWaterStations = async (req: Request, res: Response) => {
   let query;
@@ -179,6 +180,19 @@ const updateApprovalStatus = async (
 
     if (result.matchedCount === 0) {
       return res.status(400).json({ success: false });
+    }
+
+    // send email to the owner
+    const waterStation = await WaterStation.findById(req.params.id);
+    if (waterStation) {
+      const message = JSON.stringify({
+        waterStationName: waterStation.name,
+        waterStationStatus: req.body.isApproved ? "approved" : "rejected",
+        name: "Soft-Arch User",
+        email: "6432142321@student.chula.ac.th"
+      });
+
+      sendMessageToQueue('water-station-approval', message);
     }
 
     res.status(200).json({ success: true, data: result });
