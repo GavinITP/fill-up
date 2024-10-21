@@ -1,7 +1,7 @@
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import ReportIcon from '@mui/icons-material/Report';
 import Link from 'next/link';
 import Image from "next/image";
+import ReportModal from '@/components/ReportModal';
 
 function convertToDateThai( date: Date ) {
     var month_th = [
@@ -52,8 +52,7 @@ export default function Page({ params }: { params: { id: string } }) {
                         <h1 className="text-left text-5xl font-black text-[#01579B] mb-1">{waterstationData.name}</h1>
                         <p className="text-left text-gray-500">ปรับปรุงล่าสุด: {convertToDateThai(waterstationData.updatedAt)}</p>
                     </div>
-                    {/* make the p shows that it can be click*/}
-                    <p className="text-gray-300 cursor-pointer"><ReportIcon /> รายงานปัญหา</p>
+                    <ReportModal />
                 </div>
                 <div className="grid grid-cols-2 gap-4 my-5 mx-3">
                     <Image
@@ -92,7 +91,7 @@ export default function Page({ params }: { params: { id: string } }) {
                             <h2 className="text-left text-lg font-semibold">ผู้ที่ได้รับอนุญาติ:</h2>
                             {
                                 waterstationData.permission.map((permission) => (
-                                    <span className="rounded-full bg-gray-200 px-3 py-1 text-xs leading-5 text-black">
+                                    <span className="rounded-full bg-gray-200 px-3 py-1 text-xs leading-5 text-black" key={permission}>
                                         {permission}
                                     </span>
                                 ))
