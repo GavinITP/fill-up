@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, query } from "express";
 import WaterStation from "../models/waterStation.model";
 
 const getWaterStations = async (
@@ -24,14 +24,23 @@ const getWaterStations = async (
     if (name)
         filter.name = { $regex: name, $options: 'i' };
 
+
+    if (latitude && longitude) {
+        const latCenter = Number(latitude);
+        const longCenter = Number(longitude);
+        filter.location = {
+            $geoWithin: {
+                $centerSphere: [
+                    [longCenter, latCenter], // [longitude, latitude]
+                    2 / 6378.1   // radius in radians (2 km)
+                ]
+            }
+        }
+
+    }
+
     if (address)
         filter.address = { $regex: address, $options: 'i' };
-
-    if (latitude)
-        filter.latitude = Number(latitude);
-
-    if (longitude)
-        filter.longitude = Number(longitude);
 
     if (permission)
         filter.permission = { $in: (permission as string).split(',') };
@@ -68,25 +77,29 @@ const getWaterStations = async (
 
     try {
         const total = await WaterStation.countDocuments();
-        query = query.skip(startIndex).limit(limit);
-
-        const waterStations = await query;
 
         //Pagination result
         const pagination = { next: {}, prev: {} };
-        if (endIndex < total) {
-            pagination.next = {
-                page: page + 1,
-                limit,
-            };
+
+        if (limit !== -1) {
+            query = query.skip(startIndex).limit(limit);
+
+            if (endIndex < total) {
+                pagination.next = {
+                    page: page + 1,
+                    limit,
+                };
+            }
+
+            if (startIndex > 0) {
+                pagination.prev = {
+                    page: page - 1,
+                    limit,
+                };
+            }
         }
 
-        if (startIndex > 0) {
-            pagination.prev = {
-                page: page - 1,
-                limit,
-            };
-        }
+        const waterStations = await query;
 
         res.status(200).json({
             success: true,
@@ -120,6 +133,10 @@ const createWaterStation = async (
     next: NextFunction
 ) => {
     try {
+        req.body.location = {
+            type: 'Point',
+            coordinates: [req.body.longitude, req.body.latitude,]
+        }
         const createdWaterStation = await WaterStation.create(req.body);
         res.status(201).json({ success: true, data: createdWaterStation });
     } catch (err) {
@@ -211,9 +228,9 @@ const deleteWaterStation = async (
 
         await waterStation.deleteOne();
 
-        res.status(200).json({ sucess: true, data: {} });
+        res.status(200).json({ success: true, data: {} });
     } catch (err) {
-        res.status(400).json({ sucess: false });
+        res.status(400).json({ success: false });
     }
 };
 
