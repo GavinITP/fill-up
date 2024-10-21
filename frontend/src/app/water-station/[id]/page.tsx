@@ -19,26 +19,16 @@ function convertToDateThai( date: Date ) {
         "พฤศจิกายน",
         "ธันวาคม"
     ];
+    try {
+        date = new Date(date);
+    } catch (e) {
+        return null;
+    }
     return date.getDate()+" "+month_th[( date.getMonth()+1 )]+" "+( date.getFullYear()+543 );
 }
 
-export default function Page({ params }: { params: { id: string } }) {
-    // const waterstationData = await fetch(`https://api.example.com/waterstation/${params.id}`)
-    const waterstationData = {
-        name: 'My Water station',
-        latitude: 0,
-        longitude: 0,
-        address: 'หน้าห้องแลปชีวะ ชั้น 2 ณ อาคารประวัติศาสตร์พันปี โรงเรียนอีกาแห่งรัตติกาล จังหวัดสักแห่งในประเทศไหน',
-        permission: ['Everyone', 'Tester'],
-        waterTemperature: ['hot', 'cold', 'room temperature'],
-        maintenanceDetails: 'บำรุงรักษาอย่างดีไม่มีห่วง ห่วงแต่จะไม่มีคนใช้ มากกว่า สเต็ปพาสตา แอดมิสชันฮวงจุ้ยเรตติ้งเชฟ กุนซือ มิวสิคปิยมิตรพาสต้าอพาร์ตเมนต์รุสโซ ดยุคอัลมอนด์ ศากยบุตรม้านั่งตรวจทาน เซนเซอร์โบรกเกอร์คอปเตอร์เครป ซิตี้ตู้เซฟ เทอร์โบโครนาอมาตยาธิปไตยราชานุญาต พุดดิ้ง โบตั๋นอิมพีเรียล แตงโมสต็อกคาแร็คเตอร์ รองรับ วอล์คบิลไตรมาส ฮ็อตด็อกวอเตอร์มอบตัวซิตี แอพพริคอทปาสคาลช็อควิกพาเหรด',
-        isFree: true,
-        owner: 'owner',
-        approvalStatus: 'pending',
-        note: 'มีปัญหา',
-        createdAt: new Date(),
-        updatedAt: new Date()
-    }
+export default async function Page({ params }: { params: { id: string } }) {
+    const waterstationData = await fetch(`http://localhost:8080/water-station/${params.id}`).then((res) => res.json()).then((data) => data.data)
     return (
         <div className="container mx-auto px-12 my-10">
             <p className="my-6 text-left text-gray-500">
@@ -69,22 +59,22 @@ export default function Page({ params }: { params: { id: string } }) {
                         </div>
                         <div className="flex gap-2">
                             <h2 className="text-left text-lg font-semibold">อุณหภูมิน้ำ:</h2>
-                            <span className="rounded-full bg-blue-100 px-3 py-1 text-xs leading-5 text-blue-600">
-                                เย็น
-                            </span>
-                            <span className="rounded-full bg-green-100 px-3 py-1 text-xs leading-5 text-green-600">
-                                ปกติ
-                            </span>
-                            <span className="rounded-full bg-red-100 px-3 py-1 text-xs leading-5 text-red-600">
-                                ร้อน
-                            </span>
+                            {
+                                waterstationData.waterTemperature.map((temperature) => (
+                                    <span className={`rounded-full px-3 py-1 text-xs leading-5 bg-${temperature === 'ร้อน' ? 'red' : temperature === 'เย็น' ? 'blue' : 'green'}-100`} key={temperature}>
+                                        <span className={`text-${temperature === 'ร้อน' ? 'red' : temperature === 'เย็น' ? 'blue' : 'green'}-600`}>
+                                            {temperature}
+                                        </span>
+                                    </span>
+                                ))
+                            }
                         </div>
                         <div className="flex gap-2">
                             <h2 className="text-left text-lg font-semibold">ราคา:</h2>
                             {waterstationData.isFree ? (
                                 <p className="text-sm my-auto text-left text-[#2196F3]">ฟรี</p>
                             ) : (
-                                <p className="text-sm my-auto text-left text-[#2196F3]">ราคาตามจริง</p>
+                                <p className="text-sm my-auto text-left text-[#2196F3]">ไม่ฟรี</p>
                             )}
                         </div>
                         <div className="flex gap-2">
@@ -117,12 +107,12 @@ export default function Page({ params }: { params: { id: string } }) {
 }
 
 export async function generateStaticParams() {
-    const params = [
-        { id: '1' },
-        { id: '2' },
-        { id: '3' },
-    ]
-    return params
+    const params = await fetch('http://localhost:8080/water-station').then((res) => res.json())
+    return params.data.map((station:any) => ({
+        params: {
+            id: station._id
+        }
+    }))
 }
 export const dynamicParams = false 
 export const revalidate = 60
