@@ -12,15 +12,13 @@ export default function OwnerRegisterPanel() {
 
   const register = async () => {
     if (!session) return;
-
-    // Register the user
     const response = await userService.registerOwner(
       session.user._id,
       tel,
       citizenId,
     );
     if (response.success) {
-      window.location.href = "/search";
+      window.location.href = "/";
     } else {
       alert("Registration failed");
     }

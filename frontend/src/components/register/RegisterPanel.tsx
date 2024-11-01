@@ -36,7 +36,7 @@ export default function RegisterPanel() {
         if (isRegisterOwner) {
           window.location.href = "/register/owner";
         } else {
-          window.location.href = "/search";
+          window.location.href = "/";
         }
       }
     } else {
@@ -60,11 +60,13 @@ export default function RegisterPanel() {
         setInputValue={setPassword}
         title="รหัสผ่าน"
         placeholder="กรุณากรอกรหัสผ่าน"
+        password
       />
       <TextBox
         setInputValue={setConfirmPassword}
         title="ยืนยันรหัสผ่าน"
         placeholder="กรุณายืนยันรหัสผ่าน"
+        password
       />
       <CheckBox
         title="สมัครเป็นเจ้าของสถานีเติมน้ำ"
