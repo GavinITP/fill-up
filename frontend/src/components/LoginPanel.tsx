@@ -19,7 +19,7 @@ export default function LoginPanel() {
         password,
       });
 
-      window.location.href = "/search";
+      window.location.href = "/";
     } else {
       alert("Login failed");
     }
@@ -36,6 +36,7 @@ export default function LoginPanel() {
         setInputValue={setPassword}
         title="รหัสผ่าน"
         placeholder="กรุณากรอกรหัสผ่าน"
+        password
       />
       <Button color="blue" label="ลงชื่อเข้าใช้" onClick={login} />
     </div>

@@ -6,8 +6,11 @@ import Logo from "../../public/logo.svg";
 import Link from "next/link";
 import AdminNavigateSegment from "./admin/AdminNavigateSegment";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 
 export default function NavBar() {
+  const { data: session } = useSession();
   const pathName = usePathname();
   const pathSegments = pathName.split("/").filter(Boolean);
 
@@ -58,22 +61,29 @@ export default function NavBar() {
           <div
             className={`flex flex-col ${isAdmin ? "text-white" : "text-black"}`}
           >
-            <span className="text-base font-normal">UserName Lastname</span>
+            <span className="text-base font-normal">
+              {session ? session.user.name : ""}
+            </span>
             <span className="text-xs font-normal">
               {isAdmin ? "แอดมิน" : "ผู้ใช้/เจ้าของสถานีเติมน้ำ"}
             </span>
           </div>
           {isMenuShow && (
-            <div className="border-newgray-200 absolute right-0 top-[5rem] flex h-fit w-fit min-w-40 flex-col items-center justify-center divide-y overflow-hidden rounded-lg border bg-white text-base shadow-lg">
+            <div className="absolute right-0 top-[5rem] flex h-fit w-fit min-w-40 flex-col items-center justify-center divide-y overflow-hidden rounded-lg border border-newgray-200 bg-white text-base shadow-lg">
               {!isWaterStationOwner && (
                 <Link
                   href="/dashboard"
-                  className="hover:bg-newgray-200 w-full p-3 text-center"
+                  className="w-full p-3 text-center hover:bg-newgray-200"
                 >
                   Dashboard
                 </Link>
               )}
-              <button className="hover:bg-newgray-200 w-full p-3">
+              <button
+                className="w-full p-3 hover:bg-newgray-200"
+                onClick={async () =>
+                  signOut({ redirect: true, callbackUrl: "/login" })
+                }
+              >
                 ออกจากระบบ
               </button>
             </div>
