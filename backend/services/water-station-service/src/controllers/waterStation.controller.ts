@@ -48,7 +48,7 @@ const getWaterStations = async (req: Request, res: Response) => {
 
   if (onwer) filter.owner = onwer;
 
-  query = WaterStation.find(filter);
+  query = WaterStation.find(filter)
 
   if (req.query.select) {
     const fields = (req.query.select as string).split(",").join(" ");
