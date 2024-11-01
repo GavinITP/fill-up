@@ -1,6 +1,12 @@
 import Image from "next/image";
 
-const CardWithImageHeader = () => {
+const CardWithImageHeader = ({
+  name,
+  isFree,
+  address,
+  waterTemperature,
+  permission,
+}) => {
   return (
     <div className="max-w-sm overflow-hidden rounded-lg bg-white shadow-lg transition-transform duration-300 hover:scale-[1.02]">
       <Image
@@ -14,32 +20,29 @@ const CardWithImageHeader = () => {
       <div className="flex flex-col gap-3 p-6">
         <div className="flex items-center justify-between">
           <div className="flex space-x-2">
-            <span className="rounded-full bg-blue-100 px-2 py-1 text-xs text-blue-600">
-              เย็น
-            </span>
-            <span className="rounded-full bg-green-100 px-2 py-1 text-xs text-green-600">
-              ปกติ
-            </span>
-            <span className="rounded-full bg-red-100 px-2 py-1 text-xs text-red-600">
-              ร้อน
-            </span>
+            {waterTemperature.map((temp) => (
+              <span
+                key={Math.random()}
+                className={`rounded-full ${temp === "เย็น" ? "bg-blue-100" : temp === "ร้อน" ? "bg-red-100" : "bg-green-100"} px-2 py-1 text-xs ${temp === "เย็น" ? "text-blue-500" : temp === "ร้อน" ? "text-red-500" : "text-green-500"}`}
+              >
+                {temp}
+              </span>
+            ))}
           </div>
 
-          <p className="text-xs text-[#2196F3]">ฟรี</p>
+          <p className="text-xs text-[#2196F3]">{isFree}</p>
         </div>
 
         <div>
-          <h2 className="mt-2 text-2xl font-semibold">Station Name</h2>
-          <p className="mt-2 truncate text-sm text-gray-500">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, aut.
-          </p>
+          <h2 className="mt-2 text-2xl font-semibold">{name}</h2>
+          <p className="mt-2 truncate text-sm text-gray-500">{address}</p>
         </div>
 
         <div className="mt-4">
           <p className="block text-xs text-gray-500">
             สำหรับ:{" "}
             <span className="rounded-full bg-gray-200 px-2 py-1 text-black">
-              ทุกคน
+              {permission}
             </span>
           </p>
         </div>
