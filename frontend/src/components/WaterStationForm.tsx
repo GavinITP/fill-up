@@ -85,6 +85,7 @@ export default function WaterStationForm({
             isFree,
             permission,
             maintenanceDetails,
+            // Edit this to use the correct user id
             owner: "1234"
         })
         if (!data.isSuccess) {
@@ -95,8 +96,33 @@ export default function WaterStationForm({
         router.push(`/dashboard/`);
     };
 
-    const edit = () => {
-        alert(name + address + latitude + longitude + convertWaterTemperature() + isFree + permission + maintenanceDetails);
+    const edit = async () => {
+        const waterTemperature = convertWaterTemperature();
+        if (!(name && address && latitude && longitude && waterTemperature.length && permission.length && maintenanceDetails && isFree !== null)) {
+            alert("Please fill all required fields")
+            return
+        }
+        if (!waterStationId) {
+            return;
+        }
+        const data = await WaterStationService.updateWaterStation(waterStationId, {
+            name,
+            address,
+            latitude: parseFloat(latitude),
+            longitude: parseFloat(longitude),
+            waterTemperature,
+            isFree,
+            permission,
+            maintenanceDetails,
+            // Edit this to use the correct user id
+            owner: "1234"
+        })
+        if (!data.isSuccess) {
+            alert("Why??")
+            return
+        }
+        alert("Successfully updated")
+        router.push(`/dashboard/`);
     };
 
     return (
@@ -171,7 +197,7 @@ export default function WaterStationForm({
                 <h6 className="text-lg font-normal text-black">ราคา</h6>
                 <div className="inline-flex items-center gap-2">
                     <label className="relative flex items-center cursor-pointer">
-                        <input name="price" type="radio" className="peer h-5 w-5 cursor-pointer appearance-none rounded-full border border-slate-300 checked:border-slate-400 transition-all" id="free" onClick={() => setIsFree(true)} />
+                        <input name="price" type="radio" className="peer h-5 w-5 cursor-pointer appearance-none rounded-full border border-slate-300 checked:border-slate-400 transition-all" id="free" onClick={() => setIsFree(true)} checked={isFree === true} />
                         <span className="absolute bg-slate-800 w-3 h-3 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity duration-200 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                         </span>
                     </label>
@@ -179,7 +205,7 @@ export default function WaterStationForm({
                 </div>
                 <div className="inline-flex items-center gap-2">
                     <label className="relative flex items-center cursor-pointer">
-                        <input name="price" type="radio" className="peer h-5 w-5 cursor-pointer appearance-none rounded-full border border-slate-300 checked:border-slate-400 transition-all" id="paid" onClick={() => setIsFree(false)} />
+                        <input name="price" type="radio" className="peer h-5 w-5 cursor-pointer appearance-none rounded-full border border-slate-300 checked:border-slate-400 transition-all" id="paid" onClick={() => setIsFree(false)} checked={isFree === false} />
                         <span className="absolute bg-slate-800 w-3 h-3 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity duration-200 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                         </span>
                     </label>

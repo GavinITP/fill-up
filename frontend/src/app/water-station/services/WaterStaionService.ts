@@ -73,5 +73,18 @@ export const WaterStationService = {
 
         const data = await response.json()
         return { isSuccess: data.success, message: data.data }
+    },
+
+    updateWaterStation: async (id: string, input: WaterStationCreateSchema) => {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/water-station/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(input),
+        });
+
+        const data = await response.json()
+        return { isSuccess: data.success, message: data.data }
     }
 }

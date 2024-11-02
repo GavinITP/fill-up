@@ -145,6 +145,10 @@ const updateWaterStation = async (
 ) => {
   try {
     req.body.updatedAt = new Date();
+    req.body.location = {
+      type: "Point",
+      coordinates: [req.body.longitude, req.body.latitude],
+    };
     const waterStation = await WaterStation.findByIdAndUpdate(
       req.params.id,
       req.body,
