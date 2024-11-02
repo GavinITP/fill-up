@@ -6,15 +6,17 @@ import { useRouter } from 'next/navigation'
 import AddIcon from '@mui/icons-material/Add';
 import { useEffect, useState } from "react";
 import { WaterStationService } from "../water-station/services/WaterStaionService";
+import { useSession } from "next-auth/react";
 
 export default function Page() {
+    const { data: session } = useSession();
     const [waterstationList, setWaterStationList] = useState<WaterStationDetailProp[]>([])
     const router = useRouter();
 
     useEffect(() => {
         const fetchMyWaterStations = async () => {
-            // Edit this to use the correct user id
-            const response = await WaterStationService.getMyWaterStations("1234")
+            if (!session) return;
+            const response = await WaterStationService.getMyWaterStations(session.user._id)
             if (response == null) {
                 return
             }

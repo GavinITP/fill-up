@@ -9,6 +9,7 @@ import Link from "next/link";
 import { WaterStationService } from "@/app/water-station/services/WaterStaionService";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import MiltiCheckbox from "./MultiCheckbox";
+import { useSession } from "next-auth/react";
 
 interface WaterStationFormProps {
     isEdit?: boolean;
@@ -31,6 +32,8 @@ export default function WaterStationForm({
     const [isHot, setIsHot] = useState(false);
     const [isCold, setIsCold] = useState(false);
     const [isRoomTemperature, setIsRoomTemperature] = useState(false);
+
+    const { data: session } = useSession();
 
     useEffect(() => {
         const fetchWaterStation = async () => {
@@ -85,8 +88,7 @@ export default function WaterStationForm({
             isFree,
             permission,
             maintenanceDetails,
-            // Edit this to use the correct user id
-            owner: "1234"
+            owner: session?.user?._id || ""
         })
         if (!data.isSuccess) {
             alert("Why??")
@@ -105,7 +107,7 @@ export default function WaterStationForm({
         if (!waterStationId) {
             return;
         }
-        const data = await WaterStationService.updateWaterStation(waterStationId, {
+        await WaterStationService.updateWaterStation(waterStationId, {
             name,
             address,
             latitude: parseFloat(latitude),
@@ -114,12 +116,8 @@ export default function WaterStationForm({
             isFree,
             permission,
             maintenanceDetails,
-            // Edit this to use the correct user id
-            owner: "1234"
+            owner: session?.user?._id || ""
         })
-        if (!data.isSuccess) {
-            return
-        }
         alert("Successfully updated")
         router.push(`/dashboard/`);
     };
