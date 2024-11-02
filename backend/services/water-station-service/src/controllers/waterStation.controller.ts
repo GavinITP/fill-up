@@ -17,6 +17,7 @@ const getWaterStations = async (
         waterTemperature,
         isFree,
         approvalStatus,
+        owner
     } = req.query;
 
     const filter: any = {};
@@ -53,6 +54,9 @@ const getWaterStations = async (
 
     if (approvalStatus)
         filter.approvalStatus = approvalStatus;
+
+    if (owner)
+        filter.owner = owner;
 
     query = WaterStation.find(filter)
 

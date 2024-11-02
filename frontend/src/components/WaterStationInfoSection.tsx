@@ -4,7 +4,7 @@ import Tag from "./Tag";
 import TemperatureTag from "./TemperatureTag";
 
 export interface WaterStationDetailProp {
-  id?: string;
+  _id?: string;
   name: string;
   address: string;
   permission: string[];

@@ -16,6 +16,7 @@ import WaterStationInfoModal from "./WaterStationInfoModal";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import BaseModal from "./BaseModal";
 import { red } from "@mui/material/colors";
+import { WaterStationService } from "@/app/water-station/services/WaterStaionService";
 
 export default function WaterStationCard(props: {
   waterStation: WaterStationDetailProp;
@@ -38,8 +39,8 @@ export default function WaterStationCard(props: {
       color: "yellow",
       label: "แก้ไข",
       onClick: () => {
-        if (props.waterStation.id) {
-          handleEditClick(props.waterStation.id);
+        if (props.waterStation._id) {
+          handleEditClick(props.waterStation._id);
         }
       },
       isBold: true,
@@ -56,6 +57,15 @@ export default function WaterStationCard(props: {
 
   const handleEditClick = (id: string) => {
     props.router.push(`/water-station/${id}/edit`);
+  }
+
+  const handleDeleteClick = async (id: string | null) => {
+    setIsDeleteOpened(false);
+    if (!id) {
+      return;
+    }
+    await WaterStationService.deleteWaterStation(id);
+    window.location.reload();
   }
 
   const getApprovalStatus = () => {
@@ -141,10 +151,7 @@ export default function WaterStationCard(props: {
               <Button
                 color="red"
                 label="ลบ"
-                onClick={() => {
-                  setIsDeleteOpened(false);
-                  alert("delete");
-                }}
+                onClick={() => handleDeleteClick(props.waterStation._id || null)}
                 isBold={true}
               />
             </div>

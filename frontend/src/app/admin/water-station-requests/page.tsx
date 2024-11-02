@@ -15,7 +15,6 @@ export default function Page() {
         return
       }
       if (response.isSuccess) {
-        console.log(response.message)
         setWaterStationList(response.message)
       } else {
         console.error(response.message)

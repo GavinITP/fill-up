@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TextBox from "./TextBox";
 import Button from "./Button";
 import Checkbox from "./Checkbox";
@@ -12,11 +12,13 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 
 interface WaterStationFormProps {
     isEdit?: boolean;
+    waterStationId?: string | null;
     router: AppRouterInstance;
 }
 
 export default function WaterStationForm({
     isEdit = false,
+    waterStationId,
     router
 }: WaterStationFormProps) {
     const [name, setName] = useState("");
@@ -29,6 +31,36 @@ export default function WaterStationForm({
     const [isHot, setIsHot] = useState(false);
     const [isCold, setIsCold] = useState(false);
     const [isRoomTemperature, setIsRoomTemperature] = useState(false);
+
+    useEffect(() => {
+        const fetchWaterStation = async () => {
+            if (!waterStationId) {
+                console.error("No water station id")
+                return
+            }
+            const response = await WaterStationService.getWaterStationById(waterStationId)
+            if (response == null) {
+                return
+            }
+            if (response.isSuccess) {
+                setName(response.message.name)
+                setAddress(response.message.address)
+                setLatitude(response.message.location.coordinates[1])
+                setLongitude(response.message.location.coordinates[0])
+                setIsFree(response.message.isFree)
+                setPermission(response.message.permission)
+                setMaintenanceDetails(response.message.maintenanceDetails)
+                setIsHot(response.message.waterTemperature.includes("ร้อน"))
+                setIsCold(response.message.waterTemperature.includes("เย็น"))
+                setIsRoomTemperature(response.message.waterTemperature.includes("อุณหภูมิห้อง"))
+            } else {
+                console.error(response.message)
+            }
+        }
+        if (isEdit) {
+            fetchWaterStation()
+        }
+    }, [])
 
     const convertWaterTemperature = (): string[] => {
         return [
@@ -73,6 +105,7 @@ export default function WaterStationForm({
                 setInputValue={setName}
                 title="ชื่อสถานีเติมน้ำ"
                 placeholder="กรุณากรอกชื่อสถานีเติมน้ำ"
+                value={name}
             />
 
             <TextBox
@@ -80,6 +113,7 @@ export default function WaterStationForm({
                 title="ที่อยู่"
                 placeholder="กรุณากรอกที่อยู่"
                 isTextArea={true}
+                value={address}
             />
 
             {/* Latitute and Longitude */}
@@ -96,6 +130,7 @@ export default function WaterStationForm({
                         isNumber={true}
                         numberMin={-90}
                         numberMax={90}
+                        value={latitude}
                     />
                 </div>
                 <div className="grid col-span-3">
@@ -106,6 +141,7 @@ export default function WaterStationForm({
                         isNumber={true}
                         numberMin={-180}
                         numberMax={180}
+                        value={longitude}
                     />
                 </div>
             </div>
@@ -158,6 +194,7 @@ export default function WaterStationForm({
                 title="รายละเอียดการบำรุงรักษา"
                 placeholder="กรุณากรอกรายละเอียดการบำรุงรักษา"
                 isTextArea={true}
+                value={maintenanceDetails}
             />
 
             <div className="flex gap-4 w-full">

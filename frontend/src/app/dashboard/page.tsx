@@ -4,44 +4,28 @@ import WaterStationCard from "@/components/WaterStationCard";
 import { WaterStationDetailProp } from "@/components/WaterStationInfoSection";
 import { useRouter } from 'next/navigation'
 import AddIcon from '@mui/icons-material/Add';
+import { useEffect, useState } from "react";
+import { WaterStationService } from "../water-station/services/WaterStaionService";
 
 export default function Page() {
-    const waterstationList: WaterStationDetailProp[] = [
-        {
-            id: "1",
-            name: "Roseheart's water station",
-            address: "121/1 Heartslabyul Dorm, Night Raven College",
-            permission: ["Heartslabyul's student", "yuu"],
-            waterTemperature: ["ร้อน", "เย็น", "อุณหภูมิห้อง"],
-            maintenanceDetails: "details is here",
-            isFree: true,
-            date: "2020-2-3",
-            approvalStatus: "pending",
-        },
-        {
-            id: "2",
-            name: "Roseheart's water station",
-            address: "121/1 Heartslabyul Dorm, Night Raven College",
-            permission: ["Heartslabyul's student", "yuu"],
-            waterTemperature: ["ร้อน", "เย็น", "อุณหภูมิห้อง"],
-            maintenanceDetails: "details is here",
-            isFree: true,
-            date: "2020-2-3",
-            approvalStatus: "approved",
-        },
-        {
-            id: "3",
-            name: "Roseheart's water station",
-            address: "121/1 Heartslabyul Dorm, Night Raven College",
-            permission: ["Heartslabyul's student", "yuu"],
-            waterTemperature: ["ร้อน", "เย็น", "อุณหภูมิห้อง"],
-            maintenanceDetails: "details is here",
-            isFree: true,
-            date: "2020-2-3",
-            approvalStatus: "rejected",
-        },
-    ];
+    const [waterstationList, setWaterStationList] = useState<WaterStationDetailProp[]>([])
     const router = useRouter();
+
+    useEffect(() => {
+        const fetchMyWaterStations = async () => {
+            // Edit this to use the correct user id
+            const response = await WaterStationService.getMyWaterStations("1234")
+            if (response == null) {
+                return
+            }
+            if (response.isSuccess) {
+                setWaterStationList(response.message)
+            } else {
+                console.error(response.message)
+            }
+        }
+        fetchMyWaterStations()
+    }, [])
 
     const handleRegisterClick = () => {
         router.push('/water-station/register');

@@ -9,6 +9,7 @@ interface TextBoxProps {
   isNumber?: boolean;
   numberMin?: number;
   numberMax?: number;
+  value?: string | number;
 }
 
 export default function TextBox({
@@ -19,7 +20,8 @@ export default function TextBox({
   isTextArea = false,
   isNumber = false,
   numberMin,
-  numberMax
+  numberMax,
+  value,
 }: TextBoxProps) {
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
@@ -48,12 +50,14 @@ export default function TextBox({
         min={isNumber ? numberMin : undefined}
         max={isNumber ? numberMax : undefined}
         onKeyUp={isNumber ? (e) => enforceMinMax(e.currentTarget) : undefined}
+        value={value ? value : ""}
       />}
       {isTextArea && <textarea
         className="focus:outline-lightblue-200 w-full rounded-lg border border-gray-300 p-3"
         placeholder={placeholder}
         onChange={handleChange}
         disabled={disabled}
+        value={value ? value : ""}
       />}
     </div>
   );

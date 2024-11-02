@@ -10,6 +10,7 @@ import defaultPic from "../../../public/waterStationPic.svg";
 import Image from "next/image";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import WaterStationInfoModal from "../WaterStationInfoModal";
+import { WaterStationService } from "@/app/water-station/services/WaterStaionService";
 
 export default function WaterStationReportCard(props: {
   waterStation: WaterStationDetailProp;
@@ -29,7 +30,7 @@ export default function WaterStationReportCard(props: {
       color: "green",
       label: "รับรอง",
       onClick: () => {
-        alert("approve");
+        handleStatusClick(props.waterStation._id || null, true);
       },
       isBold: true,
     },
@@ -37,11 +38,19 @@ export default function WaterStationReportCard(props: {
       color: "red",
       label: "ไม่รับรอง",
       onClick: () => {
-        alert("not approve");
+        handleStatusClick(props.waterStation._id || null, false);
       },
       isBold: true,
     },
   ];
+
+  const handleStatusClick = async (id: string | null, status: boolean) => {
+    if (!id) {
+      return;
+    }
+    await WaterStationService.updateWaterStationApprovalStatus(id, status);
+    window.location.reload();
+  }
 
   return (
     <>
