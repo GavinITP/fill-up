@@ -83,8 +83,5 @@ export const WaterStationService = {
             },
             body: JSON.stringify(input),
         });
-
-        const data = await response.json()
-        return { isSuccess: data.success, message: data.data }
-    }
+    },
 }
