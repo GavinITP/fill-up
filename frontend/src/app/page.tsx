@@ -1,11 +1,66 @@
+"use client";
+
+import CardWithImageHeader from "@/components/CardWithImageHeader";
+import SearchBar from "@/components/SearchBar";
+import axios from "axios";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+
 const Home = () => {
+  const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+  const [waterStations, setWaterStations] = useState<unknown[]>([]);
+
+  const fetchWaterStations = async (query: string) => {
+    try {
+      const response = await axios.get(`${API_ENDPOINT}?name=${query}`);
+      setWaterStations(response.data.data || []);
+    } catch (error) {
+      console.error("Error fetching water stations:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchWaterStations(""); // Fetch all stations initially
+  }, []);
+
   return (
-    <>
-      <h1 className="my-8 text-center text-5xl font-extrabold">
-        FillUp Homepage
-      </h1>
-      <p className="text-center">สู้ๆน้าาา ~</p>
-    </>
+    <div className="container mx-auto px-12 pt-10">
+      <div className="mb-14 mt-4">
+        <h1 className="text-center text-5xl font-black text-[#01579B]">
+          Fill Up
+        </h1>
+        <p className="mt-6 text-center text-gray-500">
+          {'"'}ค้นหาสถานีเติมน้ำที่สะดวกและใกล้ที่สุดสำหรับคุณ
+          เพื่อให้การเข้าถึงน้ำสะอาดเป็นเรื่องง่าย{'"'}
+        </p>
+      </div>
+
+      <SearchBar search={fetchWaterStations} />
+
+      <div className="mt-16 grid grid-cols-1 items-center gap-8 lg:grid-cols-3 xl:grid-cols-4">
+        {waterStations.map((station) => (
+          <div key={station._id}>
+            <CardWithImageHeader
+              name={station.name}
+              isFree={station.isFree ? "ฟรี" : "เสียเงิน"}
+              address={station.address}
+              permission={station.permission}
+              waterTemperature={station.waterTemperature}
+            />
+          </div>
+        ))}
+      </div>
+
+      {waterStations.length === 0 && (
+        <Image
+          src="/images/waterStationNotFound.png"
+          alt="Water station not found"
+          className="mx-auto mt-10"
+          width={300}
+          height={300}
+        />
+      )}
+    </div>
   );
 };
 

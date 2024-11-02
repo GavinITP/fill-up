@@ -18,7 +18,7 @@ const WATER_STATION_SERVICE_URL = process.env.WATER_STATION_SERVICE_URL || "";
 // app.use("/mail", proxy(MAIL_SERVICE_URL));
 app.use("/reportservice", reports);
 // app.use("/user", proxy(USER_SERVICE_URL));
-// app.use("/water-station", proxy(WATER_STATION_SERVICE_URL));
+app.use("/water-station", proxy(WATER_STATION_SERVICE_URL));
 
 app.listen(PORT, () => {
   console.log(`API Gateway running on port ${PORT}`);
