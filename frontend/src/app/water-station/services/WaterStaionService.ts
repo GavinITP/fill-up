@@ -2,7 +2,7 @@ import { WaterStationCreateSchema } from '../types/WaterStationType';
 
 export const WaterStationService = {
     createWaterStation: async (input: WaterStationCreateSchema) => {
-        const response = await fetch("http://localhost:5050/", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/water-station/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -15,7 +15,7 @@ export const WaterStationService = {
     },
 
     getPendingWaterStations: async () => {
-        const response = await fetch("http://localhost:5050/?approvalStatus=pending", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/water-station/?approvalStatus=pending`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ export const WaterStationService = {
     },
 
     getMyWaterStations: async (userId: string) => {
-        const response = await fetch(`http://localhost:5050/?owner=${userId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/water-station/?owner=${userId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ export const WaterStationService = {
     },
 
     deleteWaterStation: async (id: string) => {
-        const response = await fetch(`http://localhost:5050/${id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/water-station/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ export const WaterStationService = {
     },
 
     updateWaterStationApprovalStatus: async (id: string, isApproved: boolean) => {
-        const response = await fetch(`http://localhost:5050/${id}/update-approval-status`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/water-station/${id}/update-approval-status`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ export const WaterStationService = {
     },
 
     getWaterStationById: async (id: string) => {
-        const response = await fetch(`http://localhost:5050/${id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/water-station/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

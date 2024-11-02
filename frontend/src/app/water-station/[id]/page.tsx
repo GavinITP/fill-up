@@ -3,11 +3,11 @@ import Link from 'next/link';
 import Image from "next/image";
 import ReportModal from '@/components/ReportModal';
 
-function convertToDateThai( date: Date ) {
+function convertToDateThai(date: Date) {
     var month_th = [
         "",
-        "มกราคม", 
-        "กุมภาพันธ์", 
+        "มกราคม",
+        "กุมภาพันธ์",
         "มีนาคม",
         "เมษายน",
         "พฤษภาคม",
@@ -24,11 +24,11 @@ function convertToDateThai( date: Date ) {
     } catch (e) {
         return null;
     }
-    return date.getDate()+" "+month_th[( date.getMonth()+1 )]+" "+( date.getFullYear()+543 );
+    return date.getDate() + " " + month_th[(date.getMonth() + 1)] + " " + (date.getFullYear() + 543);
 }
 
 export default async function Page({ params }: { params: { id: string } }) {
-    const waterstationData = await fetch(`http://localhost:8080/water-station/${params.id}`).then((res) => res.json()).then((data) => data.data)
+    const waterstationData = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/water-station/${params.id}`).then((res) => res.json()).then((data) => data.data)
     return (
         <div className="container mx-auto px-12 my-10">
             <p className="my-6 text-left text-gray-500">
@@ -78,7 +78,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                             )}
                         </div>
                         <div className="flex gap-2">
-                            <h2 className="text-left text-lg font-semibold">ผู้ที่ได้รับอนุญาติ:</h2>
+                            <h2 className="text-left text-lg font-semibold">ผู้ที่ได้รับอนุญาต:</h2>
                             {
                                 waterstationData.permission.map((permission) => (
                                     <span className="rounded-full bg-gray-200 px-3 py-1 text-xs leading-5 text-black" key={permission}>
@@ -107,12 +107,12 @@ export default async function Page({ params }: { params: { id: string } }) {
 }
 
 export async function generateStaticParams() {
-    const params = await fetch('http://localhost:8080/water-station').then((res) => res.json())
-    return params.data.map((station:any) => ({
+    const params = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/water-station`).then((res) => res.json())
+    return params.data.map((station: any) => ({
         params: {
             id: station._id
         }
     }))
 }
-export const dynamicParams = false 
+export const dynamicParams = false
 export const revalidate = 60

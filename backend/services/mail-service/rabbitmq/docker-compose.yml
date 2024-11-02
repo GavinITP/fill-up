@@ -10,5 +10,5 @@ services:
       RABBITMQ_VHOST: '/'
       RABBITMQ_PLUGINS: "rabbitmq_management"
     ports:
-      - '8080:15672'
+      - '15672:15672'
       - '5672:5672'

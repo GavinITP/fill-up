@@ -182,6 +182,7 @@ const updateApprovalStatus = async (
     }
 
     // send email to the owner
+    // Edit this to use the correct user info
     const waterStation = await WaterStation.findById(req.params.id);
     if (waterStation) {
       const message = JSON.stringify({
