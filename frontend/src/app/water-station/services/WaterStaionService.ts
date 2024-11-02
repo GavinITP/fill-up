@@ -50,13 +50,13 @@ export const WaterStationService = {
         return { isSuccess: data.success, message: data.data }
     },
 
-    updateWaterStationApprovalStatus: async (id: string, isApproved: boolean) => {
+    updateWaterStationApprovalStatus: async (id: string, isApproved: boolean, email: string, ownerName: string) => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/water-station/${id}/update-approval-status`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ isApproved: isApproved }),
+            body: JSON.stringify({ isApproved: isApproved, email: email, ownerName: ownerName }),
         });
 
         const data = await response.json()

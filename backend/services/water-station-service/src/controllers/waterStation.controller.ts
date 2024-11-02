@@ -186,14 +186,13 @@ const updateApprovalStatus = async (
     }
 
     // send email to the owner
-    // Edit this to use the correct user info
     const waterStation = await WaterStation.findById(req.params.id);
     if (waterStation) {
       const message = JSON.stringify({
         waterStationName: waterStation.name,
         waterStationStatus: req.body.isApproved ? "approved" : "rejected",
-        name: "Soft-Arch User",
-        email: "6432142321@student.chula.ac.th"
+        name: req.body.ownerName,
+        email: req.body.email
       });
 
       sendMessageToQueue('water-station-approval', message);

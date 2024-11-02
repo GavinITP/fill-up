@@ -11,11 +11,14 @@ import Image from "next/image";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import WaterStationInfoModal from "../WaterStationInfoModal";
 import { WaterStationService } from "@/app/water-station/services/WaterStaionService";
+import { useSession } from "next-auth/react";
 
 export default function WaterStationReportCard(props: {
   waterStation: WaterStationDetailProp;
 }) {
   const [isDetailOpened, setIsDetailOpened] = useState(false);
+
+  const { data: session } = useSession();
 
   const buttonList: ButtonProps[] = [
     {
@@ -48,7 +51,7 @@ export default function WaterStationReportCard(props: {
     if (!id) {
       return;
     }
-    await WaterStationService.updateWaterStationApprovalStatus(id, status);
+    await WaterStationService.updateWaterStationApprovalStatus(id, status, session?.user?.email || "", session?.user?.name || "user")
     window.location.reload();
   }
 
