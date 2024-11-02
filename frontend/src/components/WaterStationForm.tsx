@@ -32,9 +32,9 @@ export default function WaterStationForm({
 
     const convertWaterTemperature = (): string[] => {
         return [
-            ...(isHot ? ["hot"] : []),
-            ...(isCold ? ["cold"] : []),
-            ...(isRoomTemperature ? ["room temperature"] : [])
+            ...(isHot ? ["ร้อน"] : []),
+            ...(isCold ? ["เย็น"] : []),
+            ...(isRoomTemperature ? ["อุณหภูมิห้อง"] : [])
         ];
     }
 
@@ -56,6 +56,7 @@ export default function WaterStationForm({
             owner: "1234"
         })
         if (!data.isSuccess) {
+            alert("Why??")
             return
         }
         alert("Successfully registered")

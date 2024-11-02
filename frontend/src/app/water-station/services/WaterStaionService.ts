@@ -1,11 +1,8 @@
-import dotenv from 'dotenv';
 import { WaterStationCreateSchema } from '../types/WaterStationType';
-
-dotenv.config();
 
 export const WaterStationService = {
     createWaterStation: async (input: WaterStationCreateSchema) => {
-        const response = await fetch("http://localhost:5050/api/v1/water-stations", {
+        const response = await fetch("http://localhost:5050/", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -18,7 +15,7 @@ export const WaterStationService = {
     },
 
     getPendingWaterStations: async () => {
-        const response = await fetch("http://localhost:5050/api/v1/water-stations?approvalStatus=pending", {
+        const response = await fetch("http://localhost:5050/?approvalStatus=pending", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
