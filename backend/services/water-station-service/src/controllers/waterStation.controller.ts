@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import WaterStation from "../models/waterStation.model";
+import { sendMessageToQueue } from '../../../mail-service/src/PublisherService';
 
 const getWaterStations = async (req: Request, res: Response) => {
   let query;
@@ -160,28 +161,41 @@ const updateWaterStation = async (
 };
 
 const updateApprovalStatus = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+    req: Request,
+    res: Response,
+    next: NextFunction
 ) => {
-  try {
-    const filter = { _id: req.params.id };
-    const changedStatus = {
-      $set: { approvalStatus: req.body.isApproved ? "approved" : "rejected" },
-    };
+    try {
+        const filter = { _id: req.params.id };
+        const changedStatus = {
+            $set: { approvalStatus: req.body.isApproved ? "approved" : "rejected" },
+        };
 
-    req.body.updatedAt = new Date();
-    const result = await WaterStation.updateOne(filter, changedStatus);
+        req.body.updatedAt = new Date();
+        const result = await WaterStation.updateOne(filter, changedStatus);
 
-    if (result.matchedCount === 0) {
-      return res.status(400).json({ success: false });
+        if (result.matchedCount === 0) {
+            return res.status(400).json({ success: false });
+        }
+
+        // send email to the owner
+        const waterStation = await WaterStation.findById(req.params.id);
+        if (waterStation) {
+            const message = JSON.stringify({
+                waterStationName: waterStation.name,
+                waterStationStatus: req.body.isApproved ? "approved" : "rejected",
+                name: "Soft-Arch User",
+                email: "6432142321@student.chula.ac.th"
+            });
+
+            sendMessageToQueue('water-station-approval', message);
+        }
+
+        res.status(200).json({ success: true, data: result });
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({ success: false });
     }
-
-    res.status(200).json({ success: true, data: result });
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({ success: false });
-  }
 };
 
 const updateNote = async (req: Request, res: Response, next: NextFunction) => {
