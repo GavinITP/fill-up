@@ -28,13 +28,13 @@ export default function OwnerRegisterPanel() {
     <div className="flex w-4/5 flex-col items-center justify-start gap-6 rounded-xl border border-gray-300 bg-white p-8">
       <div className="flex w-full flex-row gap-4">
         <TextBox
-          setInputValue={() => {}}
+          setInputValue={() => { }}
           title="ชื่อ - นามสกุล"
           placeholder={session ? session.user.name : ""}
           disabled
         />
         <TextBox
-          setInputValue={() => {}}
+          setInputValue={() => { }}
           title="อีเมลล์"
           placeholder={session ? session.user.email : ""}
           disabled
@@ -46,11 +46,13 @@ export default function OwnerRegisterPanel() {
           setInputValue={setTel}
           title="เบอร์โทรศัพท์"
           placeholder="กรุณากรอกเบอร์โทรศัพท์"
+          value={tel}
         />
         <TextBox
           setInputValue={setCitizenId}
           title="หมายเลขบัตรประชาชน"
           placeholder="กรุณากรอกหมายเลขบัตรประชาชน"
+          value={citizenId}
         />
       </div>
 

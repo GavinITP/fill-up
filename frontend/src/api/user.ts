@@ -1,6 +1,6 @@
 export const userService = {
   loginUser: async (userEmail: string, userPassword: string) => {
-    const response = await fetch("http://localhost:8080/user/login", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/user/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -21,7 +21,7 @@ export const userService = {
     userEmail: string,
     userPassword: string,
   ) => {
-    const response = await fetch("http://localhost:8080/user/register", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/user/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -43,7 +43,7 @@ export const userService = {
     identityCardNumber: string,
     telephoneNumber: string,
   ) => {
-    const response = await fetch("http://localhost:8080/user/register/owner", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/user/register/owner`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -2,13 +2,13 @@
 import { useEffect, useState } from "react";
 import TextBox from "./TextBox";
 import Button from "./Button";
-import Checkbox from "./Checkbox";
 import TagAdder from "./TagAdder";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { grey } from "@mui/material/colors";
 import Link from "next/link";
 import { WaterStationService } from "@/app/water-station/services/WaterStaionService";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import MiltiCheckbox from "./MultiCheckbox";
 
 interface WaterStationFormProps {
     isEdit?: boolean;
@@ -76,7 +76,7 @@ export default function WaterStationForm({
             alert("Please fill all required fields")
             return
         }
-        const data = await WaterStationService.createWaterStation({
+        const data: { isSuccess: boolean; message: string } = await WaterStationService.createWaterStation({
             name,
             address,
             latitude: parseFloat(latitude),
@@ -118,7 +118,6 @@ export default function WaterStationForm({
             owner: "1234"
         })
         if (!data.isSuccess) {
-            alert("Why??")
             return
         }
         alert("Successfully updated")
@@ -175,17 +174,17 @@ export default function WaterStationForm({
             {/* Water Temperature */}
             <div className="flex gap-12 w-full">
                 <h6 className="text-lg font-normal text-black">อุณหภูมิของน้ำ</h6>
-                <Checkbox
+                <MiltiCheckbox
                     label="ร้อน"
                     value={isHot}
                     setInputValue={setIsHot}
                 />
-                <Checkbox
+                <MiltiCheckbox
                     label="เย็น"
                     value={isCold}
                     setInputValue={setIsCold}
                 />
-                <Checkbox
+                <MiltiCheckbox
                     label="อุณหภูมิห้อง"
                     value={isRoomTemperature}
                     setInputValue={setIsRoomTemperature}
