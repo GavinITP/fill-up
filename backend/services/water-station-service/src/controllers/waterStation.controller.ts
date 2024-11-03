@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import WaterStation from "../models/waterStation.model";
-import { sendMessageToQueue } from '../../../mail-service/src/PublisherService';
+import { sendMessageToQueue } from '../rabbitmq/PublisherService';
 
 const getWaterStations = async (req: Request, res: Response) => {
   let query;
