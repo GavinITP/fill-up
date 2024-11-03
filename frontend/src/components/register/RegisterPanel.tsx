@@ -2,7 +2,7 @@
 import { useState } from "react";
 import TextBox from "../TextBox";
 import Button from "../Button";
-import CheckBox from "../CheckBox";
+import CheckBox from "../Checkbox";
 import { userService } from "@/api/user";
 import { signIn } from "next-auth/react";
 
@@ -50,23 +50,27 @@ export default function RegisterPanel() {
         setInputValue={setFullName}
         title="ชื่อ - นามสกุล"
         placeholder="กรุณากรอกชื่อ - นามสกุล"
+        value={fullName}
       />
       <TextBox
         setInputValue={setEmail}
         title="อีเมลล์"
         placeholder="กรุณากรอกอีเมลล์"
+        value={email}
       />
       <TextBox
         setInputValue={setPassword}
         title="รหัสผ่าน"
         placeholder="กรุณากรอกรหัสผ่าน"
         password
+        value={password}
       />
       <TextBox
         setInputValue={setConfirmPassword}
         title="ยืนยันรหัสผ่าน"
         placeholder="กรุณายืนยันรหัสผ่าน"
         password
+        value={confirmPassword}
       />
       <CheckBox
         title="สมัครเป็นเจ้าของสถานีเติมน้ำ"

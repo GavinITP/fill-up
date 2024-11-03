@@ -1,6 +1,6 @@
 'use server'
 export async function createReport(name: string, description: string) {
-    const response = await fetch('http://localhost:8080/reportservice/report', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/reportservice/report`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

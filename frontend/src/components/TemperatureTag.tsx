@@ -1,11 +1,21 @@
 import Tag from "./Tag";
 
-export default function TemperatureTag(props: { label: string }) {
-  let color = "gray";
+export default function TemperatureTag({ label }: { label: string }) {
+  const labelMap: { [key: string]: string } = {
+    "hot": "ร้อน",
+    "cold": "เย็น",
+    "room temperature": "อุณหภูมิห้อง",
+  };
 
-  if (props.label === "ร้อน") color = "red";
-  else if (props.label === "เย็น") color = "blue";
-  else if (props.label === "อุณหภูมิห้อง") color = "green";
+  const colorMap: { [key: string]: string } = {
+    "ร้อน": "red",
+    "เย็น": "blue",
+    "อุณหภูมิห้อง": "green",
+  };
 
-  return <Tag color={color} label={props.label} />;
+  const translatedLabel = labelMap[label] || label;
+
+  const color = colorMap[translatedLabel] || "gray";
+
+  return <Tag color={color} label={translatedLabel} />;
 }

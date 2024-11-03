@@ -4,15 +4,17 @@ import CardWithImageHeader from "@/components/CardWithImageHeader";
 import SearchBar from "@/components/SearchBar";
 import axios from "axios";
 import Image from "next/image";
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from "react";
 
 const Home = () => {
-  const WATERSTATION_API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT+"/water-station";
+  const API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/water-station/`;
   const [waterStations, setWaterStations] = useState<unknown[]>([]);
+  const router = useRouter();
 
   const fetchWaterStations = async (query: string) => {
     try {
-      const response = await axios.get(`${WATERSTATION_API_ENDPOINT}?name=${query}`);
+      const response = await axios.get(`${API_ENDPOINT}?name=${query}&approvalStatus=approved`);
       setWaterStations(response.data.data || []);
     } catch (error) {
       console.error("Error fetching water stations:", error);
@@ -39,7 +41,7 @@ const Home = () => {
 
       <div className="mt-16 grid grid-cols-1 items-center gap-8 lg:grid-cols-3 xl:grid-cols-4">
         {waterStations.map((station) => (
-          <div key={station._id}>
+          <div key={station._id} onClick={() => { router.push(`/water-station/${station._id}`); }}>
             <CardWithImageHeader
               name={station.name}
               isFree={station.isFree ? "ฟรี" : "เสียเงิน"}
