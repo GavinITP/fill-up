@@ -6,8 +6,8 @@ import ReportModal from '@/components/ReportModal';
 function convertToDateThai(date: Date) {
     var month_th = [
         "",
-        "มกราคม",
-        "กุมภาพันธ์",
+        "มกราคม", 
+        "กุมภาพันธ์", 
         "มีนาคม",
         "เมษายน",
         "พฤษภาคม",
