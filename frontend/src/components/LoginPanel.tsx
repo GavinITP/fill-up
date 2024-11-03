@@ -31,12 +31,14 @@ export default function LoginPanel() {
         setInputValue={setEmail}
         title="อีเมลล์"
         placeholder="กรุณากรอกอีเมลล์"
+        value={email}
       />
       <TextBox
         setInputValue={setPassword}
         title="รหัสผ่าน"
         placeholder="กรุณากรอกรหัสผ่าน"
         password
+        value={password}
       />
       <Button color="blue" label="ลงชื่อเข้าใช้" onClick={login} />
     </div>
