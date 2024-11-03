@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+data:
+  NEXT_PUBLIC_API_ENDPOINT: "http://localhost:8080"
+  NEXTAUTH_SECRET: "SOME_SECRET"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  labels:
+    app: fillup
+    tier: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fillup
+      tier: frontend
+  template:
+    metadata:
+      name: frontend-pod
+      labels:
+        app: fillup
+        tier: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: punnyoz/fillup-web:latest
+          ports:
+            - containerPort: 3000
+          envFrom:
+          - configMapRef:
+              name: frontend-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  selector:
+    app: fillup
+    tier: frontend
+  type: LoadBalancer
+  ports:
+    - port: 3000
+      targetPort: 3000

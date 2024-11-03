@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-config
+data:
+  PORT: "8080"
+  USER_SERVICE_URL: "http://user-service:5002"
+  WATER_STATION_SERVICE_URL: "http://water-station-service:5000"
+  REPORT_SERVICE_URL: "http://report-service:50051"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-deployment
+  labels:
+    app: fillup
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fillup
+      tier: backend
+  template:
+    metadata:
+      name: gateway-pod
+      labels:
+        app: fillup
+        tier: backend
+    spec:
+      containers:
+        - name: gateway
+          image: punnyoz/fillup-gateway:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+          - configMapRef:
+              name: gateway-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway
+spec:
+  selector:
+    app: fillup
+    tier: backend
+  type: LoadBalancer
+  ports:
+    - port: 8080
+      targetPort: 8080

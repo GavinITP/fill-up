@@ -18,6 +18,7 @@ const loginUser = async (req: Request, res: Response) => {
 
   const result = await userService.login(loginUser);
   if (!result.success) return res.status(400).json(result);
+  console.log('User logged in');
   res.status(201).json(result);
 };
 
@@ -36,6 +37,7 @@ const loginAdmin = async (req: Request, res: Response) => {
 
   const result = await userService.loginAdmin(loginAdmin);
   if (!result.success) return res.status(400).json(result);
+  console.log('Admin logged in');
   res.status(201).json(result);
 };
 
@@ -60,6 +62,7 @@ const registerUser = async (req: Request, res: Response) => {
 
   const result = await userService.register(registerUser);
   if (!result.success) return res.status(400).json(result);
+  console.log('User registered');
   res.status(201).json({ success: true });
 };
 
@@ -73,6 +76,7 @@ const registerOwner = async (req: Request, res: Response) => {
   const result = await userService.registerOwner(owner);
 
   if (!result.success) return res.status(400).json(result);
+  console.log('Owner registered');
   res.status(201).json({ success: true });
 };
 

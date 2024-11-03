@@ -8,7 +8,12 @@ export const sendMessageToQueue = (queueName: string, message: string): Promise<
             return reject(new Error('Queue name and message are required.'));
         }
 
-        amqp.connect('amqp://localhost', (error0: any, connection: Connection) => {
+        amqp.connect(`amqp://${
+            process.env.RABBITMQ_USERNAME
+            }:${process.env.RABBITMQ_PASSWORD
+            }@${process.env.RABBITMQ_HOST
+            }:${process.env.RABBITMQ_PORT
+        }`, (error0: any, connection: Connection) => {
             if (error0) {
                 return reject(error0);
             }

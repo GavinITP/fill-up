@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: pg-user
+spec:
+  serviceName: pg-user
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pg-user
+  template:
+    metadata:
+      labels:
+        app: pg-user
+    spec:
+      containers:
+        - name: pg-user
+          image: postgres:17
+          ports:
+            - containerPort: 5432
+              name: pg-user
+          envFrom:
+          - configMapRef:
+              name: user-service-config
+          volumeMounts:
+            - name: pg-user-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: pg-user-data
+          persistentVolumeClaim:
+            claimName: pg-user-data-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pg-user-data-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi  # Adjust size as necessary
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pg-user
+spec:
+  selector:
+    app: pg-user
+  ports:
+    - name: pg-user
+      port: 5433
+      targetPort: 5432
+---

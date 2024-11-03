@@ -7,12 +7,12 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const Home = () => {
-  const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+  const WATERSTATION_API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT+"/water-station";
   const [waterStations, setWaterStations] = useState<unknown[]>([]);
 
   const fetchWaterStations = async (query: string) => {
     try {
-      const response = await axios.get(`${API_ENDPOINT}?name=${query}`);
+      const response = await axios.get(`${WATERSTATION_API_ENDPOINT}?name=${query}`);
       setWaterStations(response.data.data || []);
     } catch (error) {
       console.error("Error fetching water stations:", error);
