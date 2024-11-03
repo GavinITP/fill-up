@@ -7,6 +7,23 @@ data:
   MONGO_INITDB_ROOT_PASSWORD: "rootpassword"
   MONGO_INITDB_DATABASE: "fillup"
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongodb-init
+data:
+  init.js: |
+    db.createUser({
+      user: "fillup",
+      pwd: "filluppassword",
+      roles: [
+        {
+          role: "readWrite",
+          db: "fillup"
+        }
+      ]
+    });
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -24,7 +41,7 @@ spec:
     spec:
       containers:
         - name: mongodb
-          image: mongo:4.4
+          image: mongo:8.0.3
           ports:
             - containerPort: 27017
               name: mongodb
@@ -34,10 +51,15 @@ spec:
           volumeMounts:
             - name: mongodb-data
               mountPath: /data/db
+            - name: mongodb-init
+              mountPath: /docker-entrypoint-initdb.d
       volumes:
         - name: mongodb-data
           persistentVolumeClaim:
             claimName: mongodb-data-pvc
+        - name: mongodb-init
+          configMap:
+            name: mongodb-init
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
