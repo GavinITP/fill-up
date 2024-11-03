@@ -10,6 +10,6 @@ COPY . .
 
 COPY ../../mail-service /app/src/
 
-EXPOSE 8080
+EXPOSE 5000
 
 CMD ["npm", "run", "dev"]
