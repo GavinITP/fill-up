@@ -2,7 +2,7 @@
 import { useState } from "react";
 import TextBox from "../TextBox";
 import Button from "../Button";
-import CheckBox from "../CheckBox";
+import CheckBox from "../Checkbox";
 import { userService } from "@/api/user";
 import { signIn } from "next-auth/react";
 
