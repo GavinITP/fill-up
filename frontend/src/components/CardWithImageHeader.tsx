@@ -8,7 +8,7 @@ const CardWithImageHeader = ({
   permission,
 }) => {
   return (
-    <div className="max-w-sm overflow-hidden rounded-lg bg-white shadow-lg transition-transform duration-300 hover:scale-[1.02]">
+    <div className="overflow-hidden rounded-lg bg-white shadow-lg transition-transform duration-300 hover:scale-[1.02]">
       <Image
         className="h-40 w-full object-cover"
         src="/images/default.png"
