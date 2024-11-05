@@ -3,6 +3,7 @@ export interface ButtonProps {
   label: string;
   onClick: () => void;
   isBold?: boolean;
+  disabled?: boolean;
 }
 
 export default function Button({
@@ -10,6 +11,7 @@ export default function Button({
   label,
   onClick,
   isBold = false,
+  disabled = false,
 }: ButtonProps) {
   let colorStyle: string = "";
 
@@ -25,7 +27,8 @@ export default function Button({
 
   return (
     <button
-      className={`w-full rounded-lg px-6 py-3 text-lg ${fontWeight} hover:shadow-lg ${colorStyle} box-border`}
+      disabled={disabled}
+      className={`w-full rounded-lg px-6 py-3 text-lg ${fontWeight} box-border ${disabled ? "cursor-not-allowed bg-gray-400 text-gray-600" : `${colorStyle} hover:shadow-lg`}`}
       onClick={() => {
         onClick();
       }}

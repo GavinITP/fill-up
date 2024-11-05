@@ -2,7 +2,7 @@
 import { useState } from "react";
 import TextBox from "../TextBox";
 import Button from "../Button";
-import CheckBox from "../Checkbox";
+import CheckBox from "../CheckBox";
 import { userService } from "@/api/user";
 import { signIn } from "next-auth/react";
 
@@ -11,6 +11,7 @@ export default function RegisterPanel() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isConsent, setIsConsent] = useState(false);
   const [isRegisterOwner, setIsRegisterOwner] = useState(false);
 
   const register = async () => {
@@ -44,8 +45,11 @@ export default function RegisterPanel() {
     }
   };
 
+  const isButtonDisabled =
+    !fullName || !email || !password || !confirmPassword || !isConsent;
+
   return (
-    <div className="flex w-full flex-col items-center justify-start gap-6 rounded-xl bg-white p-8">
+    <div className="flex w-full flex-col items-center justify-start gap-4 rounded-xl bg-white p-8">
       <TextBox
         setInputValue={setFullName}
         title="ชื่อ - นามสกุล"
@@ -73,11 +77,22 @@ export default function RegisterPanel() {
         value={confirmPassword}
       />
       <CheckBox
+        title="รับทราบและให้ความยินยอม"
+        subTitle="ตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล"
+        setInputValue={setIsConsent}
+      />
+      <hr className="w-full fill-gray-200" />
+      <CheckBox
         title="สมัครเป็นเจ้าของสถานีเติมน้ำ"
         subTitle="สามารถสมัครเพิ่มเติมได้ในภายหลัง"
         setInputValue={setIsRegisterOwner}
       ></CheckBox>
-      <Button color="blue" label="ลงทะเบียน" onClick={register} />
+      <Button
+        color="blue"
+        label="ลงทะเบียน"
+        disabled={isButtonDisabled}
+        onClick={register}
+      />
     </div>
   );
 }

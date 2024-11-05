@@ -27,10 +27,10 @@ export default function CheckBox({
       ></input>
 
       <div className="flex flex-col">
-        <label htmlFor="checkbox" className="text-lg text-black">
+        <label htmlFor="checkbox" className="text-md text-black">
           {title}
         </label>
-        {subTitle && <div className="text-lg text-gray-400">{subTitle}</div>}
+        {subTitle && <div className="text-md text-gray-400">{subTitle}</div>}
       </div>
     </div>
   );
