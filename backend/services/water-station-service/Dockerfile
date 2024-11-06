@@ -8,8 +8,6 @@ RUN npm install
 
 COPY . .
 
-COPY ../../mail-service /app/src/
-
 EXPOSE 5000
 
 CMD ["npm", "run", "dev"]
