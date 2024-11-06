@@ -35,10 +35,10 @@ kind: ConfigMap
 metadata:
   name: rabbitmq-mail-service-config
 data:
-  RABBITMQ_ERL_COOKIE: 'securestring'
-  RABBITMQ_USERNAME: 'user'
-  RABBITMQ_PASSWORD: 'ilovepasswords'
-  RABBITMQ_VHOST: '/'
+  RABBITMQ_ERL_COOKIE: "securestring"
+  RABBITMQ_USERNAME: "user"
+  RABBITMQ_PASSWORD: "ilovepasswords"
+  RABBITMQ_VHOST: "/"
   RABBITMQ_PLUGINS: "rabbitmq_management"
 ---
 apiVersion: v1
@@ -73,7 +73,7 @@ kind: ConfigMap
 metadata:
   name: gateway-config
 data:
-  PORT: "8080"  # dont change
+  PORT: "8080" # dont change
   USER_SERVICE_URL: "http://user-service:5002"
   WATER_STATION_SERVICE_URL: "http://water-station-service:5000"
   REPORT_SERVICE_URL: "http://report-service:50051"
@@ -85,4 +85,6 @@ metadata:
 data:
   NEXT_PUBLIC_API_ENDPOINT: "http://10.144.81.20:8080"
   NEXTAUTH_SECRET: "SOME_SECRET"
+  JWT_SECRET: "SOME_SECRET"
 ---
+
