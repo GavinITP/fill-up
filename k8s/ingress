@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/service-upstream: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+        - path: /api/v1/(.*)
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: gateway
+              port:
+                number: 8080
+        - path: /(.*)
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: frontend
+              port:
+                number: 3000

@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: water-station-service-deployment
+  labels:
+    app: fillup
+    tier: waterstation_backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fillup
+      tier: waterstation_backend
+  template:
+    metadata:
+      name: water-station-service-pod
+      labels:
+        app: fillup
+        tier: waterstation_backend
+    spec:
+      initContainers:
+      - name: init-wait-mongodb
+        image: curlimages/curl:8.10.1
+        command:
+        - sh
+        - -c
+        - |
+          until curl -s -o /dev/null -w ''%{http_code}'' http://mongodb:27017; do
+            echo "Waiting for MongoDB to start..."
+            sleep 5
+          sleep 10
+          done
+          
+      containers:
+        - name: water-station-service
+          image: punnyoz/fillup-water-station-service:latest
+          ports:
+            - containerPort: 5000
+          envFrom:
+          - configMapRef:
+              name: water-station-service-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: water-station-service
+spec:
+  selector:
+    app: fillup
+    tier: waterstation_backend
+  ports:
+    - port: 5000
+      targetPort: 5000
+---

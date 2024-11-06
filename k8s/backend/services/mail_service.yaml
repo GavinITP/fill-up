@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mail-service-deployment
+  labels:
+    app: fillup
+    tier: mail_backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fillup
+      tier: mail_backend
+  template:
+    metadata:
+      name: mail-service-pod
+      labels:
+        app: fillup
+        tier: mail_backend
+    spec:
+      initContainers:
+      - name: init-wait-rabbitmq
+        image: curlimages/curl:8.10.1
+        command:
+        - sh
+        - -c
+        - |
+          until curl -s -o /dev/null -w ''%{http_code}'' http://rabbitmq:15672; do
+            echo "Waiting for RabbitMQ to start..."
+            sleep 5
+          sleep 10
+          done
+      containers:
+        - name: mail-service
+          image: punnyoz/fillup-mail-service:latest
+          envFrom:
+          - configMapRef:
+              name: mail-service-config

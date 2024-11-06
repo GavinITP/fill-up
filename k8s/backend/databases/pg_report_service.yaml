@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: pg-report
+spec:
+  serviceName: pg-report
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pg-report
+  template:
+    metadata:
+      labels:
+        app: pg-report
+    spec:
+      containers:
+        - name: pg-report
+          image: postgres:17
+          ports:
+            - containerPort: 5432
+              name: pg-report
+          envFrom:
+          - configMapRef:
+              name: report-service-config
+          volumeMounts:
+            - name: pg-report-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: pg-report-data
+          persistentVolumeClaim:
+            claimName: pg-report-data-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pg-report-data-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi  # Adjust size as necessary
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pg-report
+spec:
+  selector:
+    app: pg-report
+  ports:
+    - name: pg-report
+      port: 5432
+      targetPort: 5432
+---

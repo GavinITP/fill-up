@@ -102,6 +102,7 @@ const getWaterStations = async (req: Request, res: Response) => {
       data: waterStations,
     });
   } catch (err) {
+    console.log(err);
     res.status(400).json({ success: false });
   }
 };
@@ -117,6 +118,7 @@ const getWaterStation = async (
 
     res.status(200).json({ success: true, data: waterStation });
   } catch (err) {
+    console.log(err);
     res.status(404).json({ success: false });
   }
 };
@@ -134,6 +136,7 @@ const createWaterStation = async (
     const createdWaterStation = await WaterStation.create(req.body);
     res.status(201).json({ success: true, data: createdWaterStation });
   } catch (err) {
+    console.log(err);
     res.status(400).json({ success: false });
   }
 };
@@ -240,6 +243,7 @@ const deleteWaterStation = async (
 
     res.status(200).json({ success: true, data: {} });
   } catch (err) {
+    console.log(err);
     res.status(400).json({ success: false });
   }
 };
@@ -350,6 +354,7 @@ const searchWaterStations = async (req: Request, res: Response) => {
       data: waterStations,
     });
   } catch (err) {
+    console.log(err);
     res.status(400).json({ success: false, error: (err as Error).message });
   }
 };
