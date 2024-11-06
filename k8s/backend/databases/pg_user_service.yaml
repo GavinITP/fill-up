@@ -50,6 +50,6 @@ spec:
     app: pg-user
   ports:
     - name: pg-user
-      port: 5433
+      port: 5432
       targetPort: 5432
 ---

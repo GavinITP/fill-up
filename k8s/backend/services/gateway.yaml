@@ -1,13 +1,3 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: gateway-config
-data:
-  PORT: "8080"
-  USER_SERVICE_URL: "http://user-service:5002"
-  WATER_STATION_SERVICE_URL: "http://water-station-service:5000"
-  REPORT_SERVICE_URL: "http://report-service:50051"
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
