@@ -51,9 +51,15 @@ export default function WaterStationReportCard(props: {
     if (!id) {
       return;
     }
-    await WaterStationService.updateWaterStationApprovalStatus(id, status, session?.user?.email || "", session?.user?.name || "user")
+    await WaterStationService.updateWaterStationApprovalStatus(
+      session?.user.token as string,
+      id,
+      status,
+      session?.user?.email || "",
+      session?.user?.name || "user",
+    );
     window.location.reload();
-  }
+  };
 
   return (
     <>
