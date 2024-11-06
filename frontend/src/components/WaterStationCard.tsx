@@ -9,19 +9,21 @@ import WaterStationInfoSection, {
 import defaultPic from "../../public/waterStationPic.svg";
 import Image from "next/image";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CancelIcon from '@mui/icons-material/Cancel';
-import DeleteIcon from '@mui/icons-material/Delete';
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
+import DeleteIcon from "@mui/icons-material/Delete";
 import WaterStationInfoModal from "./WaterStationInfoModal";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import BaseModal from "./BaseModal";
 import { red } from "@mui/material/colors";
 import { WaterStationService } from "@/app/water-station/services/WaterStaionService";
+import { useSession } from "next-auth/react";
 
 export default function WaterStationCard(props: {
   waterStation: WaterStationDetailProp;
   router: AppRouterInstance;
 }) {
+  const { data: session } = useSession();
 
   const [isDetailOpened, setIsDetailOpened] = useState(false);
   const [isDeleteOpened, setIsDeleteOpened] = useState(false);
@@ -57,16 +59,19 @@ export default function WaterStationCard(props: {
 
   const handleEditClick = (id: string) => {
     props.router.push(`/water-station/${id}/edit`);
-  }
+  };
 
   const handleDeleteClick = async (id: string | null) => {
     setIsDeleteOpened(false);
     if (!id) {
       return;
     }
-    await WaterStationService.deleteWaterStation(id);
+    await WaterStationService.deleteWaterStation(
+      session?.user.token as string,
+      id,
+    );
     window.location.reload();
-  }
+  };
 
   const getApprovalStatus = () => {
     if (props.waterStation.approvalStatus === "pending") {
@@ -94,7 +99,7 @@ export default function WaterStationCard(props: {
       );
     }
     return null;
-  }
+  };
 
   return (
     <>
@@ -124,15 +129,15 @@ export default function WaterStationCard(props: {
       >
         <div className="flex h-fit w-[40vw] flex-col items-start justify-between gap-6 p-6">
           <div className="flex justify-start">
-            <h2
-              className="text-3xl font-bold text-newred-500 pt-1"
-            >ลบสถานีเติมน้ำ
+            <h2 className="pt-1 text-3xl font-bold text-newred-500">
+              ลบสถานีเติมน้ำ
             </h2>
             <DeleteIcon className="text-4xl" style={{ color: red[500] }} />
           </div>
           <div className="flex w-full flex-col gap-1">
             <span className="text-base font-normal text-zinc-500">
-              คุณต้องการจะลบสถานีเติมน้ำ {props.waterStation.name} ใช่หรือไม่<br />
+              คุณต้องการจะลบสถานีเติมน้ำ {props.waterStation.name} ใช่หรือไม่
+              <br />
               การกระทำนี้ไม่สามารถย้อนกลับได้
             </span>
           </div>
@@ -151,13 +156,15 @@ export default function WaterStationCard(props: {
               <Button
                 color="red"
                 label="ลบ"
-                onClick={() => handleDeleteClick(props.waterStation._id || null)}
+                onClick={() =>
+                  handleDeleteClick(props.waterStation._id || null)
+                }
                 isBold={true}
               />
             </div>
           </div>
         </div>
-      </BaseModal >
+      </BaseModal>
     </>
   );
 }
