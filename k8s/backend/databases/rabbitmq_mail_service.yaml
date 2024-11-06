@@ -50,6 +50,7 @@ metadata:
 spec:
   selector:
     app: rabbitmq
+  type: NodePort
   ports:
     - name: rabbitmq
       port: 5672
@@ -57,5 +58,6 @@ spec:
     - name: rabbitmq-admin
       port: 15672
       targetPort: 15672
+      nodePort: 30000
   # clusterIP: None
 ---
