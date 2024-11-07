@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongodb-config
+data:
+  MONGO_INITDB_ROOT_USERNAME: "root"
+  MONGO_INITDB_ROOT_PASSWORD: "rootpassword"
+  MONGO_INITDB_DATABASE: "fillup"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: report-service-config
+data:
+  POSTGRES_HOST: "pg-report"
+  POSTGRES_USER: "postgres"
+  POSTGRES_PASSWORD: "postgres"
+  POSTGRES_DB: "report-postgres"
+  POSTGRES_PORT: "5432" # service port dont change
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-service-config
+data:
+  POSTGRES_HOST: "pg-user"
+  POSTGRES_USER: "postgres"
+  POSTGRES_PASSWORD: "postgres"
+  POSTGRES_DB: "user-postgres"
+  POSTGRES_PORT: "5432" # service port dont change
+  JWT_SECRET: "SOME_SECRET"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rabbitmq-mail-service-config
+data:
+  RABBITMQ_ERL_COOKIE: "securestring"
+  RABBITMQ_USERNAME: "user"
+  RABBITMQ_PASSWORD: "ilovepasswords"
+  RABBITMQ_VHOST: "/"
+  RABBITMQ_PLUGINS: "rabbitmq_management"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mail-service-config
+data:
+  MAIL_HOST: "gmail"
+  MAIL_USERNAME: "6432142321@student.chula.ac.th"
+  MAIL_PASSWORD: "zywowkxciehihykx"
+  RABBITMQ_USERNAME: "user"
+  RABBITMQ_PASSWORD: "ilovepasswords"
+  RABBITMQ_HOST: "rabbitmq"
+  RABBITMQ_PORT: "5672" # service port dont change
+  RABBIT_MQ_SERVICE_URL: "amqp://user:ilovepasswords@rabbitmq:5672"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: water-station-service-config
+data:
+  PORT: "5000" # dont change
+  NODE_ENV: "development"
+  DB_URL: "mongodb://fillup:filluppassword@mongodb:27017/fillup?authSource=fillup" # create in init.js in mongodb
+  RABBITMQ_USERNAME: "user"
+  RABBITMQ_PASSWORD: "ilovepasswords"
+  RABBITMQ_HOST: "rabbitmq"
+  RABBITMQ_PORT: "5672" # service port dont change
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-config
+data:
+  PORT: "8080" # dont change
+  USER_SERVICE_URL: "http://user-service:5002"
+  WATER_STATION_SERVICE_URL: "http://water-station-service:5000"
+  REPORT_SERVICE_URL: "http://report-service:50051"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+data:
+  NEXT_PUBLIC_API_ENDPOINT: "http://10.144.81.20:8080"
+  NEXTAUTH_SECRET: "SOME_SECRET"
+  JWT_SECRET: "SOME_SECRET"
+---
+

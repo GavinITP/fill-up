@@ -1,12 +1,12 @@
 services:
   rabbitmq:
-    image: 'bitnami/rabbitmq:3.13.7'
-    platform: 'linux/arm64'
+    image: 'bitnami/rabbitmq:3.9'
+    # platform: 'linux/arm64'
     container_name: my-rabbitmq
     environment:
       RABBITMQ_ERL_COOKIE: 'securestring'
-      RABBITMQ_USERNAME: 'guest'
-      RABBITMQ_PASSWORD: 'guest'
+      RABBITMQ_USERNAME: 'admin'
+      RABBITMQ_PASSWORD: 'ilovepasswords'
       RABBITMQ_VHOST: '/'
       RABBITMQ_PLUGINS: "rabbitmq_management"
     ports:

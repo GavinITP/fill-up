@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rabbitmq
+spec:
+  serviceName: rabbitmq
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+        - name: rabbitmq
+          image: bitnami/rabbitmq:3.9
+          ports:
+            - containerPort: 5672
+              name: rabbitmq
+            - containerPort: 15672
+              name: rabbitmq-admin
+          envFrom:
+          - configMapRef:
+              name: rabbitmq-mail-service-config
+          volumeMounts:
+            - name: rabbitmq-data
+              mountPath: /opt/bitnami/rabbitmq/.rabbitmq/mnesia
+      volumes:
+        - name: rabbitmq-data
+          persistentVolumeClaim:
+            claimName: rabbitmq-data-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rabbitmq-data-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi  # Adjust size as necessary
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+spec:
+  selector:
+    app: rabbitmq
+  ports:
+    - name: rabbitmq
+      port: 5672
+      targetPort: 5672
+    - name: rabbitmq-admin
+      port: 15672
+      targetPort: 15672
+  # clusterIP: None
+---

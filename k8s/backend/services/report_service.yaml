@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: report-service-deployment
+  labels:
+    app: fillup
+    tier: report_backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fillup
+      tier: report_backend
+  template:
+    metadata:
+      name: report-service-pod
+      labels:
+        app: fillup
+        tier: report_backend
+    spec:
+      initContainers:
+      - name: init-db
+        image: postgres:17
+        envFrom:
+        - configMapRef:
+            name: report-service-config
+        command: ["sh", "-c", "
+          # Wait for PostgreSQL to be ready
+          until pg_isready -h pg-report -p $POSTGRES_PORT -U $POSTGRES_USER; do
+            echo 'Waiting for PostgreSQL to be ready...'
+            sleep 5
+          done;
+
+          # Check if 'reports' table exists, and create it if not
+          psql -h pg-report -U $POSTGRES_USER -d $POSTGRES_DB -tc \"
+            SELECT 1 FROM information_schema.tables WHERE table_name = 'reports';
+          \" | grep -q 1 || psql -h pg-report -U $POSTGRES_USER -d $POSTGRES_DB -c \"
+            CREATE TABLE reports (
+              id SERIAL PRIMARY KEY,
+              name VARCHAR(255) NOT NULL,
+              description TEXT,
+              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+              completed BOOLEAN DEFAULT FALSE,
+              completed_at TIMESTAMP DEFAULT NULL
+            );
+          \"
+        "]
+      containers:
+        - name: report-service
+          image: punnyoz/fillup-report-service:latest
+          ports:
+            - containerPort: 50051
+          envFrom:
+          - configMapRef:
+              name: report-service-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: report-service
+spec:
+  selector:
+    app: fillup
+    tier: report_backend
+  ports:
+    - port: 50051
+      targetPort: 50051

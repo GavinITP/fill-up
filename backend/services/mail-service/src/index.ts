@@ -6,7 +6,12 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-amqp.connect('amqp://localhost', (error0, connection) => {
+amqp.connect(`amqp://${
+    process.env.RABBITMQ_USERNAME
+    }:${process.env.RABBITMQ_PASSWORD
+    }@${process.env.RABBITMQ_HOST
+    }:${process.env.RABBITMQ_PORT
+}`, (error0, connection) => {
     if (error0) {
         throw new Error(`Connection error: ${error0.message}`);
     }

@@ -6,16 +6,21 @@ import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 const Home = () => {
+  const { data: session } = useSession();
   const API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/water-station/`;
   const [waterStations, setWaterStations] = useState<unknown[]>([]);
   const router = useRouter();
 
   const fetchWaterStations = async (query: string) => {
+    const token = session?.user.token;
+
     try {
       const response = await axios.get(
         `${API_ENDPOINT}?name=${query}&approvalStatus=approved`,
+        { headers: { Authorization: `Bearer ${token}` } },
       );
       setWaterStations(response.data.data || []);
     } catch (error) {
