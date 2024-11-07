@@ -33,27 +33,16 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: rabbitmq-mail-service-config
-data:
-  RABBITMQ_ERL_COOKIE: "securestring"
-  RABBITMQ_USERNAME: "user"
-  RABBITMQ_PASSWORD: "ilovepasswords"
-  RABBITMQ_VHOST: "/"
-  RABBITMQ_PLUGINS: "rabbitmq_management"
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
   name: mail-service-config
 data:
   MAIL_HOST: "gmail"
   MAIL_USERNAME: "6432142321@student.chula.ac.th"
-  MAIL_PASSWORD: "zywowkxciehihykx"
+  MAIL_PASSWORD: "uwfzcupizqdlfhaq"
   RABBITMQ_USERNAME: "user"
   RABBITMQ_PASSWORD: "ilovepasswords"
-  RABBITMQ_HOST: "rabbitmq"
+  RABBITMQ_HOST: "192.168.1.87"
   RABBITMQ_PORT: "5672" # service port dont change
-  RABBIT_MQ_SERVICE_URL: "amqp://user:ilovepasswords@rabbitmq:5672"
+  RABBIT_MQ_SERVICE_URL: "amqp://user:ilovepasswords@192.168.1.87:5672"
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -65,7 +54,7 @@ data:
   DB_URL: "mongodb://fillup:filluppassword@mongodb:27017/fillup?authSource=fillup" # create in init.js in mongodb
   RABBITMQ_USERNAME: "user"
   RABBITMQ_PASSWORD: "ilovepasswords"
-  RABBITMQ_HOST: "rabbitmq"
+  RABBITMQ_HOST: "192.168.1.87"
   RABBITMQ_PORT: "5672" # service port dont change
 ---
 apiVersion: v1
@@ -83,7 +72,7 @@ kind: ConfigMap
 metadata:
   name: frontend-config
 data:
-  NEXT_PUBLIC_API_ENDPOINT: "http://10.144.81.20:8080"
+  NEXT_PUBLIC_API_ENDPOINT: "http://192.168.1.87:8080"
   NEXTAUTH_SECRET: "SOME_SECRET"
   JWT_SECRET: "SOME_SECRET"
 ---
