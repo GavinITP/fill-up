@@ -49,7 +49,7 @@ export default function RegisterPanel() {
     !fullName || !email || !password || !confirmPassword || !isConsent;
 
   return (
-    <div className="flex w-full flex-col items-center justify-start gap-4 rounded-xl bg-white p-8">
+    <div className="flex w-full flex-col items-center justify-start gap-4 rounded-xl bg-white p-4 md:p-8">
       <TextBox
         setInputValue={setFullName}
         title="ชื่อ - นามสกุล"
