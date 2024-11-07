@@ -5,8 +5,8 @@ import Link from "@/components/Link";
 
 export default function Page() {
   return (
-    <div className="flex h-screen w-screen flex-row items-center justify-center gap-8 bg-white p-5">
-      <div className="w-2/5">
+    <div className="flex h-screen w-screen flex-col items-center justify-center gap-8 bg-white p-5 lg:flex-row">
+      <div className="my-4 w-2/5 lg:w-2/5">
         <Image
           src={LoginLogo.src}
           width={LoginLogo.width}
@@ -14,7 +14,7 @@ export default function Page() {
           alt="Fill up"
         />
       </div>
-      <div className="flex w-[30%] flex-col gap-4">
+      <div className="flex w-[95%] flex-col gap-4 lg:w-[30%]">
         <div className="w-fill rounded-xl border border-gray-300">
           <LoginPanel />
         </div>

@@ -25,23 +25,23 @@ export default function OwnerRegisterPanel() {
   };
 
   return (
-    <div className="flex w-4/5 flex-col items-center justify-start gap-6 rounded-xl border border-gray-300 bg-white p-8">
-      <div className="flex w-full flex-row gap-4">
+    <div className="flex w-[95%] flex-col items-center justify-start gap-6 rounded-xl border border-gray-300 bg-white p-4 md:p-8 lg:w-4/5">
+      <div className="flex w-full flex-col gap-4 md:flex-row">
         <TextBox
-          setInputValue={() => { }}
+          setInputValue={() => {}}
           title="ชื่อ - นามสกุล"
           placeholder={session ? session.user.name : ""}
           disabled
         />
         <TextBox
-          setInputValue={() => { }}
+          setInputValue={() => {}}
           title="อีเมลล์"
           placeholder={session ? session.user.email : ""}
           disabled
         />
       </div>
 
-      <div className="flex w-full flex-row gap-4">
+      <div className="flex w-full flex-col gap-4 md:flex-row">
         <TextBox
           setInputValue={setTel}
           title="เบอร์โทรศัพท์"

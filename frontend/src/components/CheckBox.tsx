@@ -21,13 +21,13 @@ export default function CheckBox({
       <input
         className="my-1.5 h-4 w-4 rounded-xl accent-black"
         type="checkbox"
-        id="checkbox"
+        id={title}
         onChange={handleChange}
         disabled={disabled}
       ></input>
 
       <div className="flex flex-col">
-        <label htmlFor="checkbox" className="text-md text-black">
+        <label htmlFor={title} className="text-md text-black">
           {title}
         </label>
         {subTitle && <div className="text-md text-gray-400">{subTitle}</div>}

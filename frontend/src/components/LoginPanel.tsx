@@ -26,7 +26,7 @@ export default function LoginPanel() {
   };
 
   return (
-    <div className="flex w-full flex-col items-center justify-start gap-7 rounded-xl bg-white p-8">
+    <div className="flex w-full flex-col items-center justify-start gap-7 rounded-xl bg-white p-4 md:p-8">
       <TextBox
         setInputValue={setEmail}
         title="อีเมลล์"
