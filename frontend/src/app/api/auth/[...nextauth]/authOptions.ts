@@ -24,7 +24,7 @@ export const authOptions: AuthOptions = {
 
         console.log("Credentials received:", credentials);
 
-        const user = await userService.loginUser(
+        const user = await userService.getUser(
           credentials.email,
           credentials.password,
         );

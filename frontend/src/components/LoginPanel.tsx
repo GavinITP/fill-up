@@ -3,14 +3,17 @@ import { useState } from "react";
 import TextBox from "./TextBox";
 import Button from "./Button";
 import { userService } from "@/api/user";
+import { adminService } from "@/api/admin";
 import { signIn } from "next-auth/react";
 
-export default function LoginPanel() {
+export default function LoginPanel(props: { type: string }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const login = async () => {
-    const response = await userService.loginUser(email, password);
+    const response = await (props.type == "user"
+      ? userService.loginUser(email, password)
+      : adminService.loginAdmin(email, password));
     if (response.success) {
       // Use NextAuth's signIn method to set session
       await signIn("credentials", {
@@ -19,7 +22,8 @@ export default function LoginPanel() {
         password,
       });
 
-      window.location.href = "/";
+      window.location.href =
+        props.type == "user" ? "/" : "/admin/owner-requests";
     } else {
       alert("Login failed");
     }

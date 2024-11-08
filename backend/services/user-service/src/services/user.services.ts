@@ -112,6 +112,37 @@ export const userService = {
     };
   },
 
+  getUser: async (body: { email: string; password: string }) => {
+    const email = body.email;
+    const password = body.password;
+
+    const user = await userRepository.getUser(email);
+    if (user === undefined) {
+      return { success: false, message: "This email hasn't registered" };
+    }
+
+    const collectedPassword: string = user.password;
+
+    const isMatch = await bcrypt.compare(password, collectedPassword);
+    if (!isMatch) {
+      return { success: false, message: 'Invalid credentials' };
+    }
+
+    const token = jsonwebtoken.sign(
+      user.user_id,
+      process.env.JWT_SECRET as string
+    );
+    return {
+      success: true,
+      message: 'Successfully log in',
+      _id: user.user_id,
+      name: user.name,
+      role: user.user_type,
+      email: email,
+      token,
+    };
+  },
+
   registerOwner: async (owner: OwnerRegisterSchema) => {
     const isSuccess = await userRepository.createOwner(owner);
 

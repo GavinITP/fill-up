@@ -3,6 +3,14 @@ import { RegisterUserSchema, UserSchema } from '../models/user.model';
 import { OwnerRegisterSchema } from '../models/owner.model';
 
 export const userRepository = {
+  getUser: async (email: string) => {
+    const user = await db.query<UserSchema>(
+      'SELECT user_id, password, user_type, name FROM user_table WHERE email = $1',
+      [email]
+    );
+    return user.rows[0]; // Returns the first user found
+  },
+
   findUser: async (email: string) => {
     const user = await db.query<UserSchema>(
       'SELECT user_id, password, user_type, name FROM user_table WHERE email = $1 AND user_type != $2',
