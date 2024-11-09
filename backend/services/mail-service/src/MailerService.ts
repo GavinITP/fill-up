@@ -8,6 +8,9 @@ export const sendMail = async (from: string, to: string, subject: string, html: 
         auth: {
             user: process.env.MAIL_USERNAME,
             pass: process.env.MAIL_PASSWORD
+        },
+        tls: {
+            rejectUnauthorized: false
         }
     });
 
