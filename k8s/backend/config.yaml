@@ -66,6 +66,7 @@ data:
   USER_SERVICE_URL: "http://user-service:5002"
   WATER_STATION_SERVICE_URL: "http://water-station-service:5000"
   REPORT_SERVICE_URL: "http://report-service:50051"
+  JWT_SECRET: "SOME_SECRET"
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -74,6 +75,5 @@ metadata:
 data:
   NEXT_PUBLIC_API_ENDPOINT: "http://192.168.100.21:8080" # your current ip address
   NEXTAUTH_SECRET: "SOME_SECRET"
-  JWT_SECRET: "SOME_SECRET"
 ---
 
