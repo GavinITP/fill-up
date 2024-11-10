@@ -25,7 +25,7 @@ spec:
         - sh
         - -c
         - |
-          until curl -s -o /dev/null -w ''%{http_code}'' http://rabbitmq:15672; do
+          until curl -s -o /dev/null -w ''%{http_code}'' http://rabbitmqcluster:15672/#; do
             echo "Waiting for RabbitMQ to start..."
             sleep 5
           sleep 10
