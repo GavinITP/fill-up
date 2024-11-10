@@ -14,7 +14,7 @@ export default function Page() {
         />
       </div>
       <div className="w-[30%]">
-        <LoginPanel type="admin" />
+        <LoginPanel role="admin" />
       </div>
     </div>
   );

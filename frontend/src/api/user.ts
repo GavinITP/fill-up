@@ -1,25 +1,9 @@
 export const userService = {
-  getUser: async (userEmail: string, userPassword: string) => {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_ENDPOINT}/user/getUser`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: userEmail,
-          password: userPassword,
-        }),
-      },
-    );
-    if (!response.ok) {
-      throw new Error("Failed to get user");
-    }
-    return await response.json();
-  },
-
-  loginUser: async (userEmail: string, userPassword: string) => {
+  loginUser: async (
+    userEmail: string,
+    userPassword: string,
+    userRole: string,
+  ) => {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_ENDPOINT}/user/login`,
       {
@@ -30,6 +14,7 @@ export const userService = {
         body: JSON.stringify({
           email: userEmail,
           password: userPassword,
+          role: userRole,
         }),
       },
     );
