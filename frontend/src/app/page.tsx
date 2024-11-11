@@ -15,8 +15,8 @@ interface WaterStation {
   name: string;
   isFree: boolean;
   address: string;
-  permission: string;
   waterTemperature: string[];
+  permission: string[];
 }
 
 const Home = () => {
@@ -25,7 +25,9 @@ const Home = () => {
   const searchQuery = searchParams.get("search") || "";
 
   const fetchWaterStations = async (query: string) => {
-    const token = session?.user.token;
+    const token = session?.user?.token;
+    if (!token) return [];
+
     const API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/water-station/`;
 
     const response = await axios.get(
@@ -40,6 +42,7 @@ const Home = () => {
     data: waterStations = [],
     isError,
     isLoading,
+    isFetched,
   } = useQuery({
     queryFn: () => fetchWaterStations(searchQuery),
     queryKey: ["water-stations", searchQuery],
@@ -58,6 +61,12 @@ const Home = () => {
       </div>
 
       <SearchBar />
+
+      {isFetched && (
+        <p className="mt-4 text-sm text-gray-500">
+          {waterStations.length} results found{" "}
+        </p>
+      )}
 
       <div className="mt-16 grid grid-cols-1 items-center gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {isLoading && (
@@ -84,7 +93,7 @@ const Home = () => {
         ))}
       </div>
 
-      {!isError && !isLoading && waterStations.length === 0 && (
+      {isFetched && waterStations.length === 0 && (
         <Image
           src="/images/waterStationNotFound.png"
           alt="Water station not found"
