@@ -6,7 +6,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 
 function convertToDateThai(date: Date) {
-  var month_th = [
+  const month_th = [
     "",
     "มกราคม",
     "กุมภาพันธ์",
@@ -71,7 +71,10 @@ export default async function Page({ params }: { params: { id: string } }) {
               ปรับปรุงล่าสุด: {convertToDateThai(waterstationData.updatedAt)}
             </p>
           </div>
-          <ReportModal waterstationId={params.id} waterstationName={waterstationData.name} />
+          <ReportModal
+            waterstationId={params.id}
+            waterstationName={waterstationData.name}
+          />
         </div>
         <div className="mx-3 my-5 grid grid-cols-2 gap-4">
           <Image

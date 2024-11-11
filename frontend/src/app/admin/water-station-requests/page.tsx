@@ -27,7 +27,7 @@ export default function Page() {
       }
     };
     fetchPendingWaterStations();
-  }, []);
+  }, [session?.user.token]);
 
   return (
     <div className="flex w-full flex-col items-center justify-start gap-20 px-36 py-16">

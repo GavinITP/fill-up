@@ -32,7 +32,7 @@ export default function Page() {
       }
     };
     fetchMyWaterStations();
-  }, []);
+  }, [session]);
 
   const handleRegisterClick = () => {
     router.push("/water-station/register");

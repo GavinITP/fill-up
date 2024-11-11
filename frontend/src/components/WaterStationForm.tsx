@@ -68,7 +68,7 @@ export default function WaterStationForm({
     if (isEdit) {
       fetchWaterStation();
     }
-  }, []);
+  }, [isEdit, session?.user.token, waterStationId]);
 
   const convertWaterTemperature = (): string[] => {
     return [
