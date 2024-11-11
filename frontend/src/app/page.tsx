@@ -30,7 +30,8 @@ const Home = () => {
 
   useEffect(() => {
     fetchWaterStations("");
-  });
+  }, []);
+
 
   return (
     <div className="container mx-auto px-12 pt-10">

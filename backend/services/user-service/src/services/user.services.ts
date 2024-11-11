@@ -3,7 +3,7 @@ import { userRepository } from '../repositories/user.repository';
 import jsonwebtoken from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
-import { OwnerRegisterSchema } from '../models/owner.model';
+import { OwnerRegisterSchema, VerifyOwnerSchema } from '../models/owner.model';
 
 dotenv.config({ path: './.env', override: true });
 
@@ -89,6 +89,25 @@ export const userService = {
     return {
       success: isSuccess,
       message: isSuccess ? 'success' : 'error to create register',
+    };
+  },
+
+  getOwnerRequests: async () => {
+    const ownerRequests = await userRepository.getOwnerRequests();
+
+    return {
+      success: true,
+      message: 'success',
+      owners: ownerRequests,
+    };
+  },
+
+  verifyOwner: async (owner: VerifyOwnerSchema) => {
+    const isSuccess = await userRepository.verifyOwner(owner);
+
+    return {
+      success: isSuccess,
+      message: isSuccess ? 'success' : 'error to verify owner',
     };
   },
 };

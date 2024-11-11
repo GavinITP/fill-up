@@ -77,6 +77,14 @@ export default function NavBar() {
                   Dashboard
                 </Link>
               )}
+              {!isWaterStationOwner && (
+                <Link
+                  href="/register/owner"
+                  className="w-full p-3 text-center hover:bg-newgray-200"
+                >
+                  ลงทะเบียนเจ้าของสถานีเติมน้ำ
+                </Link>
+              )}
               <button
                 className="w-full p-3 hover:bg-newgray-200"
                 onClick={async () =>
