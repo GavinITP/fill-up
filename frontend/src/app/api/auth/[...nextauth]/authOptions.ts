@@ -15,6 +15,7 @@ export const authOptions: AuthOptions = {
       credentials: {
         email: { label: "Email", type: "string", placeholder: "email" },
         password: { label: "Password", type: "password" },
+        role: { label: "Role", type: "string" },
       },
       async authorize(credentials, req) {
         // // Add logic here to look up the user from the credentials supplied
@@ -27,6 +28,7 @@ export const authOptions: AuthOptions = {
         const user = await userService.loginUser(
           credentials.email,
           credentials.password,
+          credentials.role,
         );
 
         if (user) {

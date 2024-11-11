@@ -23,9 +23,8 @@ export default function NavBar() {
 
   //Needed to check with role of the user
   //But for demo, use the path is okay
-  const isAdmin =
-    pathSegments.length > 0 && ["admin"].includes(pathSegments[0]);
-  const isWaterStationOwner = false;
+  const isAdmin = session?.user.role == "ADMIN";
+  const isWaterStationOwner = session?.user.role == "OWNER";
 
   const [isMenuShow, setIsMenuShow] = useState(false);
 
@@ -70,7 +69,7 @@ export default function NavBar() {
           </div>
           {isMenuShow && (
             <div className="absolute right-0 top-[5rem] flex h-fit w-fit min-w-40 flex-col items-center justify-center divide-y overflow-hidden rounded-lg border border-newgray-200 bg-white text-base shadow-lg">
-              {!isWaterStationOwner && (
+              {isWaterStationOwner && (
                 <Link
                   href="/dashboard"
                   className="w-full p-3 text-center hover:bg-newgray-200"

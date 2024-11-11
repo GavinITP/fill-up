@@ -16,7 +16,7 @@ export default function Page() {
       </div>
       <div className="flex w-[95%] flex-col gap-4 lg:w-[30%]">
         <div className="w-fill rounded-xl border border-gray-300">
-          <LoginPanel />
+          <LoginPanel role="user" />
         </div>
         <div className="flex flex-row justify-center gap-1">
           ยังไม่มีบัญชี?

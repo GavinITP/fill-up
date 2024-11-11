@@ -11,17 +11,23 @@ export async function middleware(request: NextRequest) {
   });
   const { pathname } = request.nextUrl;
 
-  if (session) return NextResponse.next();
-
   if (pathname === "/admin/login") {
     return NextResponse.next();
   }
 
   if (pathname.startsWith("/admin")) {
-    return NextResponse.redirect(new URL("/admin/login", request.url));
-  } else {
-    return NextResponse.redirect(new URL("/login", request.url));
+    if (session?.role == "ADMIN") return NextResponse.next();
+    else return NextResponse.redirect(new URL("/admin/login", request.url));
   }
+
+  if (pathname.startsWith("/dashboard")) {
+    if (session?.role == "OWNER") return NextResponse.next();
+    else return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  if (session?.role == "OWNER" || session?.role == "USER")
+    return NextResponse.next();
+  return NextResponse.redirect(new URL("/login", request.url));
 }
 
 export const config = {

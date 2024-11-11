@@ -2,27 +2,26 @@
 import { useState } from "react";
 import TextBox from "./TextBox";
 import Button from "./Button";
-import { userService } from "@/api/user";
 import { signIn } from "next-auth/react";
 
-export default function LoginPanel() {
+export default function LoginPanel(props: { role: string }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const role = props.role;
 
   const login = async () => {
-    const response = await userService.loginUser(email, password);
-    if (response.success) {
-      // Use NextAuth's signIn method to set session
-      await signIn("credentials", {
-        redirect: false,
-        email,
-        password,
-      });
+    // Use NextAuth's signIn method to set session
+    const res = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+      role,
+    });
 
-      window.location.href = "/";
-    } else {
-      alert("Login failed");
-    }
+    if (!res?.ok) alert("Login failed. Please check your credentials.");
+    else
+      window.location.href =
+        props.role == "user" ? "/" : "/admin/owner-requests";
   };
 
   return (

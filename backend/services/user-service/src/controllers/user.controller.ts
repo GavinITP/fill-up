@@ -7,6 +7,7 @@ const loginUser = async (req: Request, res: Response) => {
   const loginUser: LoginUserSchema = {
     email: req.body.email,
     password: req.body.password,
+    role: req.body.role,
   };
 
   if (req.body.email === undefined || req.body.password === undefined) {
@@ -19,25 +20,6 @@ const loginUser = async (req: Request, res: Response) => {
   const result = await userService.login(loginUser);
   if (!result.success) return res.status(400).json(result);
   console.log('User logged in');
-  res.status(201).json(result);
-};
-
-const loginAdmin = async (req: Request, res: Response) => {
-  const loginAdmin: LoginUserSchema = {
-    email: req.body.email,
-    password: req.body.password,
-  };
-
-  if (req.body.email === undefined || req.body.password === undefined) {
-    return res.status(400).json({
-      message: 'Cannot log in, email or password is missing',
-      success: false,
-    });
-  }
-
-  const result = await userService.loginAdmin(loginAdmin);
-  if (!result.success) return res.status(400).json(result);
-  console.log('Admin logged in');
   res.status(201).json(result);
 };
 
@@ -82,7 +64,6 @@ const registerOwner = async (req: Request, res: Response) => {
 
 export const userController = {
   loginUser,
-  loginAdmin,
   registerUser,
   registerOwner,
 };

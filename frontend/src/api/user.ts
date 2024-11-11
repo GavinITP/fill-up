@@ -1,15 +1,23 @@
 export const userService = {
-  loginUser: async (userEmail: string, userPassword: string) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/user/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+  loginUser: async (
+    userEmail: string,
+    userPassword: string,
+    userRole: string,
+  ) => {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_ENDPOINT}/user/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: userEmail,
+          password: userPassword,
+          role: userRole,
+        }),
       },
-      body: JSON.stringify({
-        email: userEmail,
-        password: userPassword,
-      }),
-    });
+    );
     if (!response.ok) {
       throw new Error("Failed to login");
     }
@@ -21,17 +29,20 @@ export const userService = {
     userEmail: string,
     userPassword: string,
   ) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/user/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_ENDPOINT}/user/register`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: userName,
+          email: userEmail,
+          password: userPassword,
+        }),
       },
-      body: JSON.stringify({
-        name: userName,
-        email: userEmail,
-        password: userPassword,
-      }),
-    });
+    );
     if (!response.ok) {
       throw new Error("Failed to login");
     }
@@ -43,17 +54,20 @@ export const userService = {
     identityCardNumber: string,
     telephoneNumber: string,
   ) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/user/register/owner`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_ENDPOINT}/user/register/owner`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ownerId: ownerId,
+          identityCardNumber: identityCardNumber,
+          telephoneNumber: telephoneNumber,
+        }),
       },
-      body: JSON.stringify({
-        ownerId: ownerId,
-        identityCardNumber: identityCardNumber,
-        telephoneNumber: telephoneNumber,
-      }),
-    });
+    );
     if (!response.ok) {
       throw new Error("Failed to login");
     }

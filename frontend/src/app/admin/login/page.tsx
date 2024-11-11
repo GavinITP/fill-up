@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function Page() {
   return (
-    <div className="bg-lightblue-900 flex h-screen w-screen flex-row items-center justify-center gap-8 p-5">
+    <div className="flex h-screen w-screen flex-row items-center justify-center gap-8 bg-lightblue-900 p-5">
       <div className="w-2/5">
         <Image
           src={LoginLogo.src}
@@ -14,7 +14,7 @@ export default function Page() {
         />
       </div>
       <div className="w-[30%]">
-        <LoginPanel />
+        <LoginPanel role="admin" />
       </div>
     </div>
   );

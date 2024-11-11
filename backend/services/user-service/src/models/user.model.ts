@@ -10,6 +10,7 @@ export interface RegisterUserSchema {
 export interface LoginUserSchema {
   email: string;
   password: string;
+  role: string;
 }
 
 export interface UserSchema {
