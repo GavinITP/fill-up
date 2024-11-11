@@ -46,7 +46,8 @@ const SearchBar = () => {
       />
 
       <button
-        type="submit"
+        type="button"
+        onClick={() => setQuery(debouncedQuery)}
         className="absolute right-12 top-1/2 -translate-y-1/2 transform text-[#01579B]"
       >
         <SearchIcon />
