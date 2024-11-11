@@ -8,6 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
+import SkeletonCard from "@/components/search-page/SkeletonCard";
 
 interface WaterStation {
   _id: string;
@@ -59,8 +60,17 @@ const Home = () => {
       <SearchBar />
 
       <div className="mt-16 grid grid-cols-1 items-center gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {isLoading && <p>Loading...</p>}
-        {isError && <p>Something went wrong...</p>}
+        {isLoading && (
+          <>
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+          </>
+        )}
+
         {waterStations.map((station: WaterStation) => (
           <Link key={station._id} href={`/water-station/${station._id}`}>
             <CardWithImageHeader
@@ -74,7 +84,7 @@ const Home = () => {
         ))}
       </div>
 
-      {waterStations.length === 0 && (
+      {!isError && !isLoading && waterStations.length === 0 && (
         <Image
           src="/images/waterStationNotFound.png"
           alt="Water station not found"
@@ -82,6 +92,10 @@ const Home = () => {
           width={300}
           height={300}
         />
+      )}
+
+      {isError && (
+        <p className="text-center text-red-500">Something went wrong!</p>
       )}
     </div>
   );

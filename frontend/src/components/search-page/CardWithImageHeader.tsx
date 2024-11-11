@@ -5,7 +5,7 @@ interface Props {
   isFree: string;
   address: string;
   waterTemperature: string[];
-  permission: string;
+  permission: string[];
 }
 
 export default function CardWithImageHeader({
@@ -47,11 +47,16 @@ export default function CardWithImageHeader({
         </div>
 
         <div className="mt-4">
-          <p className="block text-xs text-gray-500">
+          <p className="flex items-center gap-2 text-xs text-gray-500">
             สำหรับ:{" "}
-            <span className="rounded-full bg-gray-200 px-2 py-1 text-black">
-              {permission}
-            </span>
+            {permission.map((permission) => (
+              <span
+                key={Math.random()}
+                className="rounded-full bg-gray-200 px-2 py-1 text-black"
+              >
+                {permission}
+              </span>
+            ))}
           </p>
         </div>
       </div>
