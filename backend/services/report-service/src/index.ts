@@ -3,12 +3,22 @@ import { ReportServiceService } from "./protos/report";
 import pool from './db/postgresDB';
 
 const server = new grpc.Server();
+
 function fieldToTimestamp (result:any) {
     if (result.completed_at) {
         result.completedAt = result.completed_at.toISOString();
     }
     if (result.created_at) {
         result.createdAt = result.created_at.toISOString();
+    }
+    if (result.station_id) {
+        result.stationId = result.station_id;
+    }
+    if (result.station_name) {
+        result.stationName = result.station_name;
+    }
+    if (result.admin_note) {
+        result.adminNote = result.admin_note;
     }
     return result;
 }
@@ -46,7 +56,7 @@ server.addService(ReportServiceService, {
         }
     },
     createReport: async (call:any, callback:any) => {
-        if (call.request.name === '' || call.request.description === '') {
+        if (call.request.name === '' || call.request.description === '' || call.request.stationId === '' || call.request.stationName === '') {
             callback({
                 code: grpc.status.INVALID_ARGUMENT,
                 details: 'Invalid arguments',
@@ -54,7 +64,7 @@ server.addService(ReportServiceService, {
             return;
         }
         try {
-            const result = await pool.query('INSERT INTO reports (name, description) VALUES ($1, $2) RETURNING *', [call.request.name, call.request.description]);
+            const result = await pool.query('INSERT INTO reports (station_id, station_name, name, description) VALUES ($1, $2, $3, $4) RETURNING *', [call.request.stationId, call.request.stationName, call.request.name, call.request.description]);
             if (result.rows.length === 0) {
                 callback({
                     code: grpc.status.INTERNAL,
@@ -150,8 +160,33 @@ server.addService(ReportServiceService, {
             });
         }
     },
+    updateAdminNote: async (call:any, callback:any) => {
+        if (!call.request.id || call.request.adminNote === '') {
+            callback({
+                code: grpc.status.INVALID_ARGUMENT,
+                details: 'Invalid arguments',
+            });
+            return;
+        }
+        try {
+            const result = await pool.query('UPDATE reports SET admin_note = $1 WHERE id = $2 RETURNING *', [call.request.adminNote, call.request.id]);
+            if (result.rows.length === 0) {
+                callback({
+                    code: grpc.status.NOT_FOUND,
+                    details: 'Report not found',
+                });
+                return;
+            }
+            callback(null, fieldToTimestamp(result.rows[0]));
+        } catch (error) {
+            callback({
+                code: grpc.status.INTERNAL,
+                details: (error as Error).message,
+            });
+        }
+    }
 });
 
-server.bindAsync("127.0.0.1:50051", grpc.ServerCredentials.createInsecure(), () => {
-    console.log('Server started at http://127.0.0.1:50051');
+server.bindAsync("0.0.0.0:50055", grpc.ServerCredentials.createInsecure(), () => {
+    console.log('Server started at http://0.0.0.0:50055');
 });

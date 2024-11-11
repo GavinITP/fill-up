@@ -9,17 +9,21 @@ service ReportService {
     rpc UpdateReport(Report) returns (Report) {}
     rpc DeleteReport(ReportId) returns (Empty) {}
     rpc MarkReport(ReportCompletion) returns (Report) {}
+    rpc UpdateAdminNote(AdminNote) returns (Report) {}
 }
 
 message Empty {}
 
 message Report {
     optional string id = 1;
-    string name = 2;
-    string description = 3;
-    optional string created_at = 4;
-    optional bool completed = 5;
-    optional string completed_at = 6;
+    string stationId = 2;
+    string stationName = 3;
+    string name = 4;
+    string description = 5;
+    optional string adminNote = 6;
+    optional string created_at = 7;
+    optional bool completed = 8;
+    optional string completed_at = 9;
 }
 
 message ReportId {
@@ -33,4 +37,9 @@ message ReportList {
 message ReportCompletion {
     string id = 1;
     bool completed = 2;
+}
+
+message AdminNote {
+    string id = 1;
+    string adminNote = 2;
 }

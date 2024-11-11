@@ -71,7 +71,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               ปรับปรุงล่าสุด: {convertToDateThai(waterstationData.updatedAt)}
             </p>
           </div>
-          <ReportModal />
+          <ReportModal waterstationId={params.id} waterstationName={waterstationData.name} />
         </div>
         <div className="mx-3 my-5 grid grid-cols-2 gap-4">
           <Image

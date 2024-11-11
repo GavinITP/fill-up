@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import Fade from '@mui/material/Fade';
 import { createReport } from '@/app/actions/createReport';
 
-export default function ReportModal() {
+export default function ReportModal(stationId: string, stationName: string) {
     const rootRef = useRef<HTMLDivElement>(null);
     const [open, setOpen] = useState(false);
     const [name, setName] = useState('');
@@ -58,7 +58,7 @@ export default function ReportModal() {
                                         alert(e);
                                         return;
                                     }
-                                    const res = createReport(name, description);
+                                    const res = createReport(stationId,stationName, name, description);
                                     handleClose();
                                     if(res) {
                                         alert('ส่งรายงานสำเร็จ');

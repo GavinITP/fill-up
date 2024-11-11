@@ -1,7 +1,7 @@
 import { Pool } from 'pg';
 import dotenv from 'dotenv';
 
-dotenv.config({path:'./.env', override: true});
+// dotenv.config({path:'./.env', override: true});
 
 const pool = new Pool({
     host: process.env.POSTGRES_HOST,

@@ -65,7 +65,7 @@ data:
   PORT: "8080" # dont change
   USER_SERVICE_URL: "http://user-service:5002"
   WATER_STATION_SERVICE_URL: "http://water-station-service:5000"
-  REPORT_SERVICE_URL: "http://report-service:50051"
+  REPORT_SERVICE_URL: "report-service:50055"
   JWT_SECRET: "SOME_SECRET"
 ---
 apiVersion: v1
