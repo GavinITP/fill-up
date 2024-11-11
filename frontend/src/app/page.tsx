@@ -10,12 +10,12 @@ import { useSession } from "next-auth/react";
 
 const Home = () => {
   const { data: session } = useSession();
-  const API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/water-station/`;
   const [waterStations, setWaterStations] = useState<unknown[]>([]);
   const router = useRouter();
 
   const fetchWaterStations = async (query: string) => {
     const token = session?.user.token;
+    const API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/water-station/`;
 
     try {
       const response = await axios.get(
@@ -28,10 +28,9 @@ const Home = () => {
     }
   };
 
-  useEffect(() => {
-    fetchWaterStations("");
-  }, []);
-
+  // useEffect(() => {
+  //   fetchWaterStations("");
+  // }, []);
 
   return (
     <div className="container mx-auto px-12 pt-10">

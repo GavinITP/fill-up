@@ -2,20 +2,33 @@
 
 import SearchIcon from "@mui/icons-material/Search";
 import FilterButton from "./FilterButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
-interface Props {
-  search: (query: unknown) => void;
-}
-
-const SearchBar = ({ search }: Props) => {
+const SearchBar = ({ search }: { search: (query: string) => void }) => {
   const [query, setQuery] = useState("");
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const handleInputChange = (e: { target: { value: unknown } }) => {
+  useEffect(() => {
+    const initialQuery = searchParams.get("query") || "";
+    setQuery(initialQuery);
+  }, [searchParams]);
+
+  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
     setQuery(value);
     search(value);
-  };
+
+    const params = new URLSearchParams(searchParams.toString());
+    if (value) {
+      params.set("query", value);
+    } else {
+      params.delete("query");
+    }
+
+    router.replace(`?${params.toString()}`);
+  }
 
   return (
     <div className="relative mx-auto w-full">
