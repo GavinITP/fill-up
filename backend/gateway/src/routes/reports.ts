@@ -6,5 +6,5 @@ router.route("/reports").get(reports.getReports);
 router.route("/report").get(reports.getReport).post(reports.createReport);
 router.route("/report/:id").get(reports.getReport).put(reports.updateReport).delete(reports.deleteReport);
 router.route("/report/:id/complete").put(reports.markReport);
-
+router.route("/report/:id/updateAdminNote").put(reports.updateAdminNote);
 module.exports = router;

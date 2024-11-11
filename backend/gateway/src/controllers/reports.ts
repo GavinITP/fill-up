@@ -1,7 +1,8 @@
 import { ReportServiceClient } from "../protos/report"
 import * as grpc from '@grpc/grpc-js';
 
-const client = new ReportServiceClient('localhost:50051', grpc.credentials.createInsecure());
+const client = new ReportServiceClient(`${process.env.REPORT_SERVICE_URL}`, grpc.credentials.createInsecure());
+console.log(`Report Service URL: ${process.env.REPORT_SERVICE_URL}`);
 
 function fieldToTimestamp (result:any) {
     if (result.completed_at) {
@@ -12,6 +13,7 @@ function fieldToTimestamp (result:any) {
     }
     return result;
 }
+
 exports.getReports = (req:any, res:any) => {
     client.getReports({}, (error, response) => {
         if (!error) {
@@ -64,6 +66,16 @@ exports.deleteReport = (req:any, res:any) => {
 
 exports.markReport = (req:any, res:any) => {
     client.markReport({ id: req.params.id, completed: req.body.completed }, (error, response) => {
+        if (!error) {
+            res.json(response);
+        } else {
+            res.json({ error: error.details });
+        }
+    });
+}
+
+exports.updateAdminNote = (req:any, res:any) => {
+    client.updateAdminNote({ id: req.params.id, adminNote: req.body.adminNote }, (error, response) => {
         if (!error) {
             res.json(response);
         } else {

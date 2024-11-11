@@ -26,8 +26,11 @@ export interface Empty {
 
 export interface Report {
   id?: string | undefined;
+  stationId: string;
+  stationName: string;
   name: string;
   description: string;
+  adminNote?: string | undefined;
   createdAt?: string | undefined;
   completed?: boolean | undefined;
   completedAt?: string | undefined;
@@ -44,6 +47,11 @@ export interface ReportList {
 export interface ReportCompletion {
   id: string;
   completed: boolean;
+}
+
+export interface AdminNote {
+  id: string;
+  adminNote: string;
 }
 
 function createBaseEmpty(): Empty {
@@ -92,8 +100,11 @@ export const Empty: MessageFns<Empty> = {
 function createBaseReport(): Report {
   return {
     id: undefined,
+    stationId: "",
+    stationName: "",
     name: "",
     description: "",
+    adminNote: undefined,
     createdAt: undefined,
     completed: undefined,
     completedAt: undefined,
@@ -105,20 +116,29 @@ export const Report: MessageFns<Report> = {
     if (message.id !== undefined) {
       writer.uint32(10).string(message.id);
     }
+    if (message.stationId !== "") {
+      writer.uint32(18).string(message.stationId);
+    }
+    if (message.stationName !== "") {
+      writer.uint32(26).string(message.stationName);
+    }
     if (message.name !== "") {
-      writer.uint32(18).string(message.name);
+      writer.uint32(34).string(message.name);
     }
     if (message.description !== "") {
-      writer.uint32(26).string(message.description);
+      writer.uint32(42).string(message.description);
+    }
+    if (message.adminNote !== undefined) {
+      writer.uint32(50).string(message.adminNote);
     }
     if (message.createdAt !== undefined) {
-      writer.uint32(34).string(message.createdAt);
+      writer.uint32(58).string(message.createdAt);
     }
     if (message.completed !== undefined) {
-      writer.uint32(40).bool(message.completed);
+      writer.uint32(64).bool(message.completed);
     }
     if (message.completedAt !== undefined) {
-      writer.uint32(50).string(message.completedAt);
+      writer.uint32(74).string(message.completedAt);
     }
     return writer;
   },
@@ -142,31 +162,52 @@ export const Report: MessageFns<Report> = {
             break;
           }
 
-          message.name = reader.string();
+          message.stationId = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.description = reader.string();
+          message.stationName = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.createdAt = reader.string();
+          message.name = reader.string();
           continue;
         case 5:
-          if (tag !== 40) {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.description = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.adminNote = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.createdAt = reader.string();
+          continue;
+        case 8:
+          if (tag !== 64) {
             break;
           }
 
           message.completed = reader.bool();
           continue;
-        case 6:
-          if (tag !== 50) {
+        case 9:
+          if (tag !== 74) {
             break;
           }
 
@@ -184,8 +225,11 @@ export const Report: MessageFns<Report> = {
   fromJSON(object: any): Report {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : undefined,
+      stationId: isSet(object.stationId) ? globalThis.String(object.stationId) : "",
+      stationName: isSet(object.stationName) ? globalThis.String(object.stationName) : "",
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       description: isSet(object.description) ? globalThis.String(object.description) : "",
+      adminNote: isSet(object.adminNote) ? globalThis.String(object.adminNote) : undefined,
       createdAt: isSet(object.createdAt) ? globalThis.String(object.createdAt) : undefined,
       completed: isSet(object.completed) ? globalThis.Boolean(object.completed) : undefined,
       completedAt: isSet(object.completedAt) ? globalThis.String(object.completedAt) : undefined,
@@ -197,11 +241,20 @@ export const Report: MessageFns<Report> = {
     if (message.id !== undefined) {
       obj.id = message.id;
     }
+    if (message.stationId !== "") {
+      obj.stationId = message.stationId;
+    }
+    if (message.stationName !== "") {
+      obj.stationName = message.stationName;
+    }
     if (message.name !== "") {
       obj.name = message.name;
     }
     if (message.description !== "") {
       obj.description = message.description;
+    }
+    if (message.adminNote !== undefined) {
+      obj.adminNote = message.adminNote;
     }
     if (message.createdAt !== undefined) {
       obj.createdAt = message.createdAt;
@@ -221,8 +274,11 @@ export const Report: MessageFns<Report> = {
   fromPartial<I extends Exact<DeepPartial<Report>, I>>(object: I): Report {
     const message = createBaseReport();
     message.id = object.id ?? undefined;
+    message.stationId = object.stationId ?? "";
+    message.stationName = object.stationName ?? "";
     message.name = object.name ?? "";
     message.description = object.description ?? "";
+    message.adminNote = object.adminNote ?? undefined;
     message.createdAt = object.createdAt ?? undefined;
     message.completed = object.completed ?? undefined;
     message.completedAt = object.completedAt ?? undefined;
@@ -420,6 +476,80 @@ export const ReportCompletion: MessageFns<ReportCompletion> = {
   },
 };
 
+function createBaseAdminNote(): AdminNote {
+  return { id: "", adminNote: "" };
+}
+
+export const AdminNote: MessageFns<AdminNote> = {
+  encode(message: AdminNote, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.adminNote !== "") {
+      writer.uint32(18).string(message.adminNote);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): AdminNote {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAdminNote();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.adminNote = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AdminNote {
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      adminNote: isSet(object.adminNote) ? globalThis.String(object.adminNote) : "",
+    };
+  },
+
+  toJSON(message: AdminNote): unknown {
+    const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.adminNote !== "") {
+      obj.adminNote = message.adminNote;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AdminNote>, I>>(base?: I): AdminNote {
+    return AdminNote.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AdminNote>, I>>(object: I): AdminNote {
+    const message = createBaseAdminNote();
+    message.id = object.id ?? "";
+    message.adminNote = object.adminNote ?? "";
+    return message;
+  },
+};
+
 export type ReportServiceService = typeof ReportServiceService;
 export const ReportServiceService = {
   getReports: {
@@ -476,6 +606,15 @@ export const ReportServiceService = {
     responseSerialize: (value: Report) => Buffer.from(Report.encode(value).finish()),
     responseDeserialize: (value: Buffer) => Report.decode(value),
   },
+  updateAdminNote: {
+    path: "/report.ReportService/UpdateAdminNote",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: AdminNote) => Buffer.from(AdminNote.encode(value).finish()),
+    requestDeserialize: (value: Buffer) => AdminNote.decode(value),
+    responseSerialize: (value: Report) => Buffer.from(Report.encode(value).finish()),
+    responseDeserialize: (value: Buffer) => Report.decode(value),
+  },
 } as const;
 
 export interface ReportServiceServer extends UntypedServiceImplementation {
@@ -485,6 +624,7 @@ export interface ReportServiceServer extends UntypedServiceImplementation {
   updateReport: handleUnaryCall<Report, Report>;
   deleteReport: handleUnaryCall<ReportId, Empty>;
   markReport: handleUnaryCall<ReportCompletion, Report>;
+  updateAdminNote: handleUnaryCall<AdminNote, Report>;
 }
 
 export interface ReportServiceClient extends Client {
@@ -559,6 +699,21 @@ export interface ReportServiceClient extends Client {
   ): ClientUnaryCall;
   markReport(
     request: ReportCompletion,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: Report) => void,
+  ): ClientUnaryCall;
+  updateAdminNote(
+    request: AdminNote,
+    callback: (error: ServiceError | null, response: Report) => void,
+  ): ClientUnaryCall;
+  updateAdminNote(
+    request: AdminNote,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: Report) => void,
+  ): ClientUnaryCall;
+  updateAdminNote(
+    request: AdminNote,
     metadata: Metadata,
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: Report) => void,

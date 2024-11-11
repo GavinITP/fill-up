@@ -2,7 +2,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/authOptions";
 
-export async function createReport(name: string, description: string) {
+export async function createReport(stationId: string, stationName: string, name: string, description: string) {
     const session = await getServerSession(authOptions);
     const token = session?.user.token;
 
@@ -13,6 +13,8 @@ export async function createReport(name: string, description: string) {
             'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
+            stationId: stationId,
+            stationName: stationName,
             name: name,
             description: description
         })
