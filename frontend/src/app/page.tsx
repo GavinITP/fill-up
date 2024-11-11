@@ -4,10 +4,10 @@ import CardWithImageHeader from "@/components/search-page/CardWithImageHeader";
 import SearchBar from "@/components/search-page/SearchBar";
 import axios from "axios";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 
 interface WaterStation {
   _id: string;
@@ -15,12 +15,11 @@ interface WaterStation {
   isFree: boolean;
   address: string;
   permission: string;
-  waterTemperature: string;
+  waterTemperature: string[];
 }
 
 const Home = () => {
   const { data: session } = useSession();
-  const router = useRouter();
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
 
@@ -62,13 +61,8 @@ const Home = () => {
       <div className="mt-16 grid grid-cols-1 items-center gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {isLoading && <p>Loading...</p>}
         {isError && <p>Something went wrong...</p>}
-        {waterStations.map((station) => (
-          <div
-            key={station._id}
-            onClick={() => {
-              router.push(`/water-station/${station._id}`);
-            }}
-          >
+        {waterStations.map((station: WaterStation) => (
+          <Link key={station._id} href={`/water-station/${station._id}`}>
             <CardWithImageHeader
               name={station.name}
               isFree={station.isFree ? "ฟรี" : "เสียเงิน"}
@@ -76,7 +70,7 @@ const Home = () => {
               permission={station.permission}
               waterTemperature={station.waterTemperature}
             />
-          </div>
+          </Link>
         ))}
       </div>
 
