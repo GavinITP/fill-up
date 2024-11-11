@@ -29,8 +29,8 @@ const Home = () => {
   };
 
   useEffect(() => {
-    fetchWaterStations(""); // Fetch all stations initially
-  }, []);
+    fetchWaterStations("");
+  });
 
   return (
     <div className="container mx-auto px-12 pt-10">

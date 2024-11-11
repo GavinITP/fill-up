@@ -1,4 +1,5 @@
 export interface ButtonProps {
+  id?: string;
   color: string;
   label: string;
   onClick: () => void;

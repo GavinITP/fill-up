@@ -3,7 +3,7 @@ import CloseIcon from "@mui/icons-material/Close";
 export default function Tag(props: {
   color: string;
   label: string;
-  action?: Function;
+  action?: () => void;
 }) {
   let colorString: string = "";
 
@@ -21,7 +21,7 @@ export default function Tag(props: {
       {props.label}
       {props.action && (
         <button
-          className="text-newgray-200 flex items-center justify-center rounded-full bg-zinc-400 p-[0.1rem]"
+          className="flex items-center justify-center rounded-full bg-zinc-400 p-[0.1rem] text-newgray-200"
           onClick={() => {
             if (props.action) props.action();
           }}

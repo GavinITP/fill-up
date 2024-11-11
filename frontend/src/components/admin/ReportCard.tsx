@@ -3,7 +3,6 @@
 import { useState } from "react";
 import BaseCardWithButton from "../BaseCardWithButton";
 import Button, { ButtonProps } from "../Button";
-import BaseModal from "../BaseModal";
 import BaseModalWithInput from "../BaseModalWithInput";
 
 export default function ReportCard(props: {

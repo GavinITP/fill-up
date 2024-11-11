@@ -8,7 +8,7 @@ import { authOptions } from "./api/auth/[...nextauth]/authOptions";
 
 export const metadata: Metadata = {
   title: "Fill Up",
-  description: "",
+  description: "Find water stations near you",
 };
 
 const notoSansThai = Noto_Sans_Thai({
@@ -16,11 +16,11 @@ const notoSansThai = Noto_Sans_Thai({
   subsets: ["latin", "thai"],
 });
 
-interface Props {
+export default async function RootLayout({
+  children,
+}: {
   children: React.ReactNode;
-}
-
-export default async function RootLayout({ children }: Props) {
+}) {
   const session = await getServerSession(authOptions);
 
   return (

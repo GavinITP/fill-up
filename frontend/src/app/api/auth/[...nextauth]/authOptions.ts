@@ -13,11 +13,11 @@ export const authOptions: AuthOptions = {
       // e.g. domain, username, password, 2FA token, etc.
       // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
-        email: { label: "Email", type: "string", placeholder: "email" },
+        email: { label: "Email", type: "text", placeholder: "email" },
         password: { label: "Password", type: "password" },
-        role: { label: "Role", type: "string" },
+        role: { label: "Role", type: "text" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         // // Add logic here to look up the user from the credentials supplied
         // const user = { id: '1', name: 'J Smith', email: 'jsmith@example.com' };
 
@@ -53,8 +53,9 @@ export const authOptions: AuthOptions = {
     async jwt({ token, user }) {
       return { ...token, ...user };
     },
-    async session({ session, token, user }) {
-      session.user = token as any;
+    async session({ session, token }) {
+      // @ts-expect-error: token may not have a user property
+      session.user = token;
       return session;
     },
   },
