@@ -62,8 +62,8 @@ const registerOwner = async (req: Request, res: Response) => {
   res.status(201).json({ success: true });
 };
 
-const getNewOwners = async (req: Request, res: Response) => {
-  const result = await userService.getNewOwners();
+const getOwnerRequests = async (req: Request, res: Response) => {
+  const result = await userService.getOwnerRequests();
   if (!result.success) return res.status(400).json(result);
   res.status(200).json(result);
 };
@@ -85,6 +85,6 @@ export const userController = {
   loginUser,
   registerUser,
   registerOwner,
-  getNewOwners,
+  getOwnerRequests,
   verifyOwner
 };

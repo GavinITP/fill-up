@@ -50,9 +50,10 @@ export const userRepository = {
     return newOwner.rows[0];
   },
 
-  getNewOwners: async () => {
-    const newOwners = await db.query('SELECT * FROM owner WHERE is_verified = false');
-    return newOwners.rows;
+  getOwnerRequests: async () => {
+    const ownerRequests = await db.query(
+      'SELECT owner_id, name, email, tel, identity_card_number FROM owner INNER JOIN user_table ON owner.owner_id = user_table.user_id WHERE is_verified = false');
+    return ownerRequests.rows;
   },
 
   verifyOwner: async (owner: VerifyOwnerSchema) => {

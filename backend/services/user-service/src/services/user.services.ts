@@ -92,13 +92,13 @@ export const userService = {
     };
   },
 
-  getNewOwners: async () => {
-    const newOwners = await userRepository.getNewOwners();
+  getOwnerRequests: async () => {
+    const ownerRequests = await userRepository.getOwnerRequests();
 
     return {
       success: true,
       message: 'success',
-      owners: newOwners,
+      owners: ownerRequests,
     };
   },
 

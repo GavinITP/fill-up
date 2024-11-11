@@ -6,13 +6,26 @@ import BaseCardWithButton from "../BaseCardWithButton";
 import Button, { ButtonProps } from "../Button";
 import BaseModal from "../BaseModal";
 import mockIdCard from "../../../public/mockIDcard.png";
+import { adminService } from "@/api/admin";
+import { useSession } from "next-auth/react";
 
-export default function UserCard(props: {
+export interface UserCardProps {
+  owner_id: string;
   name: string;
   email: string;
-  telNo: string;
+  tel: string;
   idCard: string;
-}) {
+}
+
+export default function UserCard({
+  owner_id,
+  name,
+  email,
+  tel,
+  idCard
+}: UserCardProps) {
+  const { data: session } = useSession();
+  const token = session?.user.token;
   const [isOpened, setIsOpened] = useState(false);
 
   const buttonList: ButtonProps[] = [
@@ -27,20 +40,28 @@ export default function UserCard(props: {
     {
       color: "green",
       label: "รับรอง",
-      onClick: () => {
-        alert("approve");
+      onClick: async () => {
+        handleVerificationClick(token, owner_id, true);
       },
       isBold: true,
     },
     {
       color: "red",
       label: "ไม่รับรอง",
-      onClick: () => {
-        alert("not approve");
+      onClick: async () => {
+        handleVerificationClick(token, owner_id, false);
       },
       isBold: true,
     },
   ];
+
+  const handleVerificationClick = async (token: string | undefined, owner_id: string, status: boolean) => {
+    if (!token) {
+      return;
+    }
+    await adminService.sendOwnerVerification(token, owner_id, status);
+    window.location.reload();
+  }
 
   const detail = (key: string, value: string) => {
     return (
@@ -55,10 +76,10 @@ export default function UserCard(props: {
     <>
       <BaseCardWithButton buttonList={buttonList}>
         <div className="flex flex-col items-start justify-start gap-2 px-4 py-6">
-          <h4 className="text-xl font-bold">{props.name}</h4>
+          <h4 className="text-xl font-bold">{name}</h4>
           <div>
-            {detail("อีเมลล์", props.email)}
-            {detail("เบอร์โทรศัพท์", props.telNo)}
+            {detail("อีเมลล์", email)}
+            {detail("เบอร์โทรศัพท์", tel)}
           </div>
         </div>
       </BaseCardWithButton>
@@ -75,7 +96,7 @@ export default function UserCard(props: {
               width: "100%",
               height: "auto",
             }}
-            alt={`id card of ${props.name}`}
+            alt={`id card of ${name}`}
           />
           <Button
             color="blue"
