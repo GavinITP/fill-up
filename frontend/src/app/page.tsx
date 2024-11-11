@@ -1,7 +1,7 @@
 "use client";
 
-import CardWithImageHeader from "@/components/CardWithImageHeader";
-import SearchBar from "@/components/SearchBar";
+import CardWithImageHeader from "@/components/search-page/CardWithImageHeader";
+import SearchBar from "@/components/search-page/SearchBar";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -25,6 +25,8 @@ const Home = () => {
 
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
+
+  console.log("searchQuery", searchQuery);
 
   const fetchWaterStations = async (query: string) => {
     const token = session?.user.token;

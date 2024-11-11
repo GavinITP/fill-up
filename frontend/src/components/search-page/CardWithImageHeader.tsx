@@ -1,12 +1,20 @@
 import Image from "next/image";
 
-const CardWithImageHeader = ({
+interface Props {
+  name: string;
+  isFree: string;
+  address: string;
+  waterTemperature: string[];
+  permission: string;
+}
+
+export default function CardWithImageHeader({
   name,
   isFree,
   address,
   waterTemperature,
   permission,
-}) => {
+}: Props) {
   return (
     <div className="overflow-hidden rounded-lg bg-white shadow-lg transition-transform duration-300 hover:scale-[1.02]">
       <Image
@@ -49,6 +57,4 @@ const CardWithImageHeader = ({
       </div>
     </div>
   );
-};
-
-export default CardWithImageHeader;
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import SearchIcon from "@mui/icons-material/Search";
-import FilterButton from "./FilterButton";
+import FilterButton from "../FilterButton";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDebounce } from "use-debounce";
@@ -18,13 +18,13 @@ const SearchBar = () => {
   }, [searchParams]);
 
   useEffect(() => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (debouncedQuery) {
+    const currentSearch = searchParams.get("search") || "";
+
+    if (debouncedQuery && debouncedQuery !== currentSearch) {
+      const params = new URLSearchParams(searchParams.toString());
       params.set("search", debouncedQuery);
-    } else {
-      params.delete("search");
+      router.replace(`?${params.toString()}`);
     }
-    router.replace(`?${params.toString()}`);
   }, [debouncedQuery, router, searchParams]);
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -35,7 +35,7 @@ const SearchBar = () => {
     <div className="relative mx-auto w-full">
       <input
         type="text"
-        defaultValue={query}
+        value={query}
         onChange={handleInputChange}
         className="w-full rounded-2xl border px-4 py-2 pr-20 shadow-sm focus:border-[#0288D1] focus:outline-none focus:ring-1 focus:ring-[#0288D1]"
         placeholder="ค้นหาสถานีเติมน้ำ"
