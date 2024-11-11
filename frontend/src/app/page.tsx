@@ -6,8 +6,8 @@ import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useQuery } from "@tanstack/react-query";
 
 interface WaterStation {
   _id: string;
@@ -20,32 +20,30 @@ interface WaterStation {
 
 const Home = () => {
   const { data: session } = useSession();
-  const [waterStations, setWaterStations] = useState<WaterStation[]>([]);
   const router = useRouter();
-
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
-
-  console.log("searchQuery", searchQuery);
 
   const fetchWaterStations = async (query: string) => {
     const token = session?.user.token;
     const API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/water-station/`;
 
-    try {
-      const response = await axios.get(
-        `${API_ENDPOINT}?name=${query}&approvalStatus=approved`,
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
-      setWaterStations(response.data.data || []);
-    } catch (error) {
-      console.error("Error fetching water stations:", error);
-    }
+    const response = await axios.get(
+      `${API_ENDPOINT}?name=${query}&approvalStatus=approved`,
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+
+    return response.data.data || [];
   };
 
-  useEffect(() => {
-    fetchWaterStations(searchQuery);
-  }, [searchQuery]);
+  const {
+    data: waterStations = [],
+    isError,
+    isLoading,
+  } = useQuery({
+    queryFn: () => fetchWaterStations(searchQuery),
+    queryKey: ["water-stations", searchQuery],
+  });
 
   return (
     <div className="container mx-auto px-12 pt-10">
@@ -62,6 +60,8 @@ const Home = () => {
       <SearchBar />
 
       <div className="mt-16 grid grid-cols-1 items-center gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {isLoading && <p>Loading...</p>}
+        {isError && <p>Something went wrong...</p>}
         {waterStations.map((station) => (
           <div
             key={station._id}

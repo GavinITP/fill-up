@@ -24,6 +24,10 @@ const SearchBar = () => {
       const params = new URLSearchParams(searchParams.toString());
       params.set("search", debouncedQuery);
       router.replace(`?${params.toString()}`);
+    } else if (!debouncedQuery && currentSearch) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("search");
+      router.replace(`?${params.toString()}`);
     }
   }, [debouncedQuery, router, searchParams]);
 
