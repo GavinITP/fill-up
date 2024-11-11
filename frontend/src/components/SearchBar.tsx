@@ -5,26 +5,25 @@ import FilterButton from "./FilterButton";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const SearchBar = ({ search }: { search: (query: string) => void }) => {
+const SearchBar = () => {
   const [query, setQuery] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const initialQuery = searchParams.get("query") || "";
+    const initialQuery = searchParams.get("search") || "";
     setQuery(initialQuery);
   }, [searchParams]);
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
     setQuery(value);
-    search(value);
 
     const params = new URLSearchParams(searchParams.toString());
     if (value) {
-      params.set("query", value);
+      params.set("search", value);
     } else {
-      params.delete("query");
+      params.delete("search");
     }
 
     router.replace(`?${params.toString()}`);

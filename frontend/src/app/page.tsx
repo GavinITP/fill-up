@@ -5,13 +5,26 @@ import SearchBar from "@/components/SearchBar";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
+interface WaterStation {
+  _id: string;
+  name: string;
+  isFree: boolean;
+  address: string;
+  permission: string;
+  waterTemperature: string;
+}
+
 const Home = () => {
   const { data: session } = useSession();
-  const [waterStations, setWaterStations] = useState<unknown[]>([]);
+  const [waterStations, setWaterStations] = useState<WaterStation[]>([]);
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get("search") || "";
 
   const fetchWaterStations = async (query: string) => {
     const token = session?.user.token;
@@ -28,9 +41,9 @@ const Home = () => {
     }
   };
 
-  // useEffect(() => {
-  //   fetchWaterStations("");
-  // }, []);
+  useEffect(() => {
+    fetchWaterStations(searchQuery);
+  }, [searchQuery]);
 
   return (
     <div className="container mx-auto px-12 pt-10">
@@ -44,7 +57,7 @@ const Home = () => {
         </p>
       </div>
 
-      <SearchBar search={fetchWaterStations} />
+      <SearchBar />
 
       <div className="mt-16 grid grid-cols-1 items-center gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {waterStations.map((station) => (
