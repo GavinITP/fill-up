@@ -49,7 +49,7 @@ const Home = () => {
   });
 
   return (
-    <div className="container mx-auto px-12 pt-10">
+    <div className="xl:max-w-screen mx-auto px-12 pt-10">
       <div className="mb-14 mt-4">
         <h1 className="text-center text-5xl font-black text-[#01579B]">
           Fill Up
@@ -68,7 +68,7 @@ const Home = () => {
         </p>
       )}
 
-      <div className="mt-16 grid grid-cols-1 items-center gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="mt-16 grid grid-cols-1 items-center gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
         {isLoading && (
           <>
             <SkeletonCard />
