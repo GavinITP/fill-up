@@ -1,6 +1,6 @@
 import { db } from '../db/postgresDB';
 import { RegisterUserSchema, UserSchema } from '../models/user.model';
-import { OwnerRegisterSchema } from '../models/owner.model';
+import { OwnerRegisterSchema, VerifyOwnerSchema } from '../models/owner.model';
 
 export const userRepository = {
   findUser: async (email: string) => {
@@ -48,5 +48,32 @@ export const userRepository = {
     );
 
     return newOwner.rows[0];
+  },
+
+  getNewOwners: async () => {
+    const newOwners = await db.query('SELECT * FROM owner WHERE is_verified = false');
+    return newOwners.rows;
+  },
+
+  verifyOwner: async (owner: VerifyOwnerSchema) => {
+    if (!owner.isApproved) {
+      const deletedOwner = await db.query(
+        `DELETE FROM owner WHERE owner_id = $1 RETURNING *;`,
+        [owner.ownerId]
+      );
+      return deletedOwner.rows[0];
+    }
+
+    const verifiedOwner = await db.query(
+      `UPDATE owner SET is_verified = true WHERE owner_id = $1 RETURNING *;`,
+      [owner.ownerId]
+    );
+
+    await db.query(
+      `UPDATE user_table SET user_type = 'OWNER' WHERE user_id = $1 RETURNING *;`,
+      [owner.ownerId]
+    );
+
+    return verifiedOwner.rows[0];
   },
 };

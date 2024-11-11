@@ -3,3 +3,8 @@ export interface OwnerRegisterSchema {
   identityCardNumber: string;
   telephoneNumber: string;
 }
+
+export interface VerifyOwnerSchema {
+  ownerId: string;
+  isApproved: boolean;
+}

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { userService } from '../services/user.services';
 import { LoginUserSchema, RegisterUserSchema } from '../models/user.model';
-import { OwnerRegisterSchema } from '../models/owner.model';
+import { OwnerRegisterSchema, VerifyOwnerSchema } from '../models/owner.model';
 
 const loginUser = async (req: Request, res: Response) => {
   const loginUser: LoginUserSchema = {
@@ -62,8 +62,29 @@ const registerOwner = async (req: Request, res: Response) => {
   res.status(201).json({ success: true });
 };
 
+const getNewOwners = async (req: Request, res: Response) => {
+  const result = await userService.getNewOwners();
+  if (!result.success) return res.status(400).json(result);
+  res.status(200).json(result);
+};
+
+const verifyOwner = async (req: Request, res: Response) => {
+  const owner: VerifyOwnerSchema = {
+    ownerId: req.body.ownerId,
+    isApproved: req.body.isApproved,
+  };
+
+  const result = await userService.verifyOwner(owner);
+
+  if (!result.success) return res.status(400).json(result);
+  console.log('Owner verified');
+  res.status(200).json({ success: true });
+}
+
 export const userController = {
   loginUser,
   registerUser,
   registerOwner,
+  getNewOwners,
+  verifyOwner
 };
