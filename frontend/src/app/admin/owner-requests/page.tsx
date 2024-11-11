@@ -1,6 +1,6 @@
 "use client";
 
-import { adminService } from "@/api/admin";
+import { adminService } from "@/api/admin-service";
 import UserCard, { UserCardProps } from "@/components/admin/UserCard";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";

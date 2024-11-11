@@ -6,7 +6,7 @@ import BaseCardWithButton from "../BaseCardWithButton";
 import Button, { ButtonProps } from "../Button";
 import BaseModal from "../BaseModal";
 import mockIdCard from "../../../public/mockIDcard.png";
-import { adminService } from "@/api/admin";
+import { adminService } from "@/api/admin-service";
 import { useSession } from "next-auth/react";
 
 export interface UserCardProps {
