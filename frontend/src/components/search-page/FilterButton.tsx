@@ -20,9 +20,23 @@ const FilterButton = () => {
   const applyFilters = () => {
     const params = new URLSearchParams(searchParams.toString());
 
-    if (waterTemperature) params.set("waterTemperature", waterTemperature);
-    if (isFree) params.set("isFree", isFree.toString());
-    if (sort) params.set("sort", sort);
+    if (waterTemperature) {
+      params.set("waterTemperature", waterTemperature);
+    } else {
+      params.delete("waterTemperature");
+    }
+
+    if (isFree) {
+      params.set("isFree", isFree.toString());
+    } else {
+      params.delete("isFree");
+    }
+
+    if (sort) {
+      params.set("sort", sort);
+    } else {
+      params.delete("sort");
+    }
 
     router.replace(`?${params.toString()}`);
     setIsFilterOpen(false);
@@ -69,11 +83,11 @@ const FilterButton = () => {
 
             {/* Sort filter */}
             <label className="flex flex-col text-sm">
-              <span className="text-gray-500">Sort by:</span>
+              <span className="text-gray-500">เรียงตาม:</span>
               <select value={sort} onChange={(e) => setSort(e.target.value)}>
                 <option value="">-</option>
                 <option value="name">ชื่อ</option>
-                <option value="-createdAt">ความใหม่</option>
+                <option value="-createdAt">อายุ (ใหม่ - เก่า)</option>
               </select>
             </label>
 

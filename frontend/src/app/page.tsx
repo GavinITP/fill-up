@@ -48,7 +48,7 @@ const Home = () => {
   } = useQuery({
     queryFn: () =>
       WaterStationService.getWaterStations(searchQuery, token, filters),
-    queryKey: ["water-stations", searchQuery],
+    queryKey: ["water-stations", searchQuery, filters],
   });
 
   return (
@@ -67,7 +67,7 @@ const Home = () => {
 
       {isFetched && (
         <p className="mt-4 text-sm text-gray-500">
-          {waterStations.length} results found{" "}
+          {waterStations.length} results found
         </p>
       )}
 
