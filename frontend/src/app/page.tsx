@@ -33,13 +33,21 @@ const Home = () => {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
 
+  const filters = {
+    permission: searchParams.get("permission") || "",
+    waterTemperature: searchParams.get("waterTemperature") || "",
+    isFree: searchParams.get("isFree") === "true",
+    sort: searchParams.get("sort") || "",
+  };
+
   const {
     data: waterStations = [],
     isError,
     isLoading,
     isFetched,
   } = useQuery({
-    queryFn: () => WaterStationService.getWaterStations(searchQuery, token),
+    queryFn: () =>
+      WaterStationService.getWaterStations(searchQuery, token, filters),
     queryKey: ["water-stations", searchQuery],
   });
 
