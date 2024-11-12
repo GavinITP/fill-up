@@ -16,9 +16,9 @@ export default function CardWithImageHeader({
   permission,
 }: Props) {
   return (
-    <div className="overflow-hidden rounded-lg bg-white shadow-lg transition-transform duration-300 hover:scale-[1.02]">
+    <div className="h-full overflow-hidden rounded-lg bg-white shadow-lg transition-transform duration-300 hover:scale-[1.02]">
       <Image
-        className="h-40 w-full object-cover"
+        className="w-full object-cover"
         src="/images/default.png"
         alt="Default card image"
         width={300}
@@ -42,7 +42,7 @@ export default function CardWithImageHeader({
         </div>
 
         <div>
-          <h2 className="mt-2 text-2xl font-semibold">{name}</h2>
+          <h2 className="mt-2 truncate text-2xl font-semibold">{name}</h2>
           <p className="mt-2 truncate text-sm text-gray-500">{address}</p>
         </div>
 
