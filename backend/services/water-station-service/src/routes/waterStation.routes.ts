@@ -3,9 +3,6 @@ import { waterStationController } from "../controllers/waterStation.controller";
 
 const router = express.Router({ mergeParams: true });
 
-// Search water stations
-router.route("/search").get(waterStationController.searchWaterStations);
-
 router
   .route("/")
   .get(waterStationController.getWaterStations)

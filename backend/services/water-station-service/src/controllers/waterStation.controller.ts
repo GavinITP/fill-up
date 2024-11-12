@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import WaterStation from "../models/waterStation.model";
-import { sendMessageToQueue } from '../rabbitmq/PublisherService';
+import { sendMessageToQueue } from "../rabbitmq/PublisherService";
 
 const getWaterStations = async (req: Request, res: Response) => {
   let query;
@@ -14,7 +14,7 @@ const getWaterStations = async (req: Request, res: Response) => {
     waterTemperature,
     isFree,
     approvalStatus,
-    owner
+    owner,
   } = req.query;
 
   const filter: any = {};
@@ -48,7 +48,7 @@ const getWaterStations = async (req: Request, res: Response) => {
 
   if (owner) filter.owner = owner;
 
-  query = WaterStation.find(filter)
+  query = WaterStation.find(filter);
 
   if (req.query.select) {
     const fields = (req.query.select as string).split(",").join(" ");
@@ -195,10 +195,10 @@ const updateApprovalStatus = async (
         waterStationName: waterStation.name,
         waterStationStatus: req.body.isApproved ? "approved" : "rejected",
         name: req.body.ownerName,
-        email: req.body.email
+        email: req.body.email,
       });
 
-      sendMessageToQueue('water-station-approval', message);
+      sendMessageToQueue("water-station-approval", message);
     }
 
     res.status(200).json({ success: true, data: result });
@@ -248,117 +248,6 @@ const deleteWaterStation = async (
   }
 };
 
-const searchWaterStations = async (req: Request, res: Response) => {
-  let query;
-
-  const {
-    name,
-    latitude,
-    longitude,
-    address,
-    permission,
-    waterTemperature,
-    isFree,
-    approvalStatus,
-    minTemperature,
-    maxTemperature,
-  } = req.query;
-
-  const filter: any = {};
-
-  if (name && (name as string).length > 0) {
-    filter.name = { $regex: name, $options: "i" };
-  }
-
-  // Geo-location search (within a 2 km radius)
-  if (latitude && longitude) {
-    const latCenter = Number(latitude);
-    const longCenter = Number(longitude);
-    filter.location = {
-      $geoWithin: {
-        $centerSphere: [
-          [longCenter, latCenter], // [longitude, latitude]
-          2 / 6378.1, // radius in radians (2 km)
-        ],
-      },
-    };
-  }
-
-  // Address search (case-insensitive)
-  if (address) filter.address = { $regex: address, $options: "i" };
-
-  // Permission filtering
-  if (permission)
-    filter.permission = { $in: (permission as string).split(",") };
-
-  // Water temperature filtering (optional range filter)
-  if (waterTemperature) {
-    filter.waterTemperature = { $in: (waterTemperature as string).split(",") };
-  } else if (minTemperature || maxTemperature) {
-    filter.waterTemperature = {};
-    if (minTemperature) filter.waterTemperature.$gte = Number(minTemperature);
-    if (maxTemperature) filter.waterTemperature.$lte = Number(maxTemperature);
-  }
-
-  // Free station filtering
-  if (isFree) filter.isFree = isFree === "true";
-
-  // Approval status filtering
-  if (approvalStatus) filter.approvalStatus = approvalStatus;
-
-  query = WaterStation.find(filter);
-
-  // Field selection
-  if (req.query.select) {
-    const fields = (req.query.select as string).split(",").join(" ");
-    query = query.select(fields);
-  }
-
-  // Sort results
-  if (req.query.sort) {
-    const sortBy = (req.query.sort as string).split(",").join(" ");
-    query = query.sort(sortBy);
-  } else {
-    query = query.sort("-createdAt");
-  }
-
-  // Pagination
-  const page = parseInt(req.query.page as string, 10) || 1;
-  const limit = parseInt(req.query.limit as string, 10) || 25;
-  const startIndex = (page - 1) * limit;
-  const endIndex = page * limit;
-
-  try {
-    const total = await WaterStation.countDocuments();
-
-    // Pagination result
-    const pagination: any = {};
-    if (limit !== -1) {
-      query = query.skip(startIndex).limit(limit);
-
-      if (endIndex < total) {
-        pagination.next = { page: page + 1, limit };
-      }
-
-      if (startIndex > 0) {
-        pagination.prev = { page: page - 1, limit };
-      }
-    }
-
-    const waterStations = await query;
-
-    res.status(200).json({
-      success: true,
-      count: waterStations.length,
-      pagination,
-      data: waterStations,
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({ success: false, error: (err as Error).message });
-  }
-};
-
 export const waterStationController = {
   getWaterStations,
   getWaterStation,
@@ -367,5 +256,4 @@ export const waterStationController = {
   updateApprovalStatus,
   updateNote,
   deleteWaterStation,
-  searchWaterStations,
 };

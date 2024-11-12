@@ -2,7 +2,7 @@
 
 import CardWithImageHeader from "@/components/search-page/CardWithImageHeader";
 import SearchBar from "@/components/search-page/SearchBar";
-import axios from "axios";
+import { WaterStationService } from "@/api/water-station-service";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -19,24 +19,19 @@ interface WaterStation {
   permission: string[];
 }
 
+interface SessionUser {
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+  token?: string | null;
+}
+
 const Home = () => {
   const { data: session } = useSession();
+
+  const token = (session?.user as SessionUser)?.token || "";
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
-
-  const fetchWaterStations = async (query: string) => {
-    const token = session?.user?.token;
-    if (!token) return [];
-
-    const API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/water-station/`;
-
-    const response = await axios.get(
-      `${API_ENDPOINT}?name=${query}&approvalStatus=approved`,
-      { headers: { Authorization: `Bearer ${token}` } },
-    );
-
-    return response.data.data || [];
-  };
 
   const {
     data: waterStations = [],
@@ -44,7 +39,7 @@ const Home = () => {
     isLoading,
     isFetched,
   } = useQuery({
-    queryFn: () => fetchWaterStations(searchQuery),
+    queryFn: () => WaterStationService.getWaterStations(searchQuery, token),
     queryKey: ["water-stations", searchQuery],
   });
 
