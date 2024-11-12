@@ -26,12 +26,7 @@ const USER_SERVICE_URL = process.env.USER_SERVICE_URL || '';
 const WATER_STATION_SERVICE_URL = process.env.WATER_STATION_SERVICE_URL || '';
 
 app.use('/report-service', jwtAuth, reports);
-app.use('/user/owner', jwtAuth, proxy(USER_SERVICE_URL, {
-  proxyReqPathResolver: (req) => {
-    return `/owner${req.url}`;
-  }
-}));
-app.use('/user', proxy(USER_SERVICE_URL));
+app.use('/user', jwtAuth, proxy(USER_SERVICE_URL));
 app.use('/water-station', jwtAuth, proxy(WATER_STATION_SERVICE_URL));
 
 const PORT = process.env.PORT || 8080;

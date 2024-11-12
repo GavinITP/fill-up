@@ -12,6 +12,7 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import WaterStationInfoModal from "../WaterStationInfoModal";
 import { WaterStationService } from "@/app/water-station/services/WaterStaionService";
 import { useSession } from "next-auth/react";
+import { adminService } from "@/api/admin-service";
 
 export default function WaterStationReportCard(props: {
   waterStation: WaterStationDetailProp;
@@ -33,7 +34,7 @@ export default function WaterStationReportCard(props: {
       color: "green",
       label: "รับรอง",
       onClick: () => {
-        handleStatusClick(props.waterStation._id || null, true);
+        handleStatusClick(props.waterStation._id, props.waterStation.owner, true);
       },
       isBold: true,
     },
@@ -41,22 +42,23 @@ export default function WaterStationReportCard(props: {
       color: "red",
       label: "ไม่รับรอง",
       onClick: () => {
-        handleStatusClick(props.waterStation._id || null, false);
+        handleStatusClick(props.waterStation._id, props.waterStation.owner, false);
       },
       isBold: true,
     },
   ];
 
-  const handleStatusClick = async (id: string | null, status: boolean) => {
-    if (!id) {
-      return;
-    }
+  const handleStatusClick = async (id: string | undefined, ownerId: string | undefined, status: boolean) => {
+    const owner = await adminService.getOwnerEmailAndName(session?.user.token as string, ownerId || "");
+    const ownerName = owner.name;
+    const ownerEmail = owner.email;
+
     await WaterStationService.updateWaterStationApprovalStatus(
       session?.user.token as string,
-      id,
+      id || "",
       status,
-      session?.user?.email || "",
-      session?.user?.name || "user",
+      ownerEmail || "",
+      ownerName || "user",
     );
     window.location.reload();
   };

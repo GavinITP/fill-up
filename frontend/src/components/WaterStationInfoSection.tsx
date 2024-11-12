@@ -13,6 +13,7 @@ export interface WaterStationDetailProp {
   maintenanceDetails: string;
   date: string;
   approvalStatus?: string;
+  owner?: string;
 }
 
 export default function WaterStationInfoSection({

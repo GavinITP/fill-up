@@ -77,7 +77,7 @@ export default function NavBar() {
                   Dashboard
                 </Link>
               )}
-              {!isWaterStationOwner && (
+              {!isWaterStationOwner && !isAdmin && (
                 <Link
                   href="/register/owner"
                   className="w-full p-3 text-center hover:bg-newgray-200"

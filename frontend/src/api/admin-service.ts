@@ -38,4 +38,19 @@ export const adminService = {
         }
         return await response.json();
     },
+
+    getOwnerEmailAndName: async (token: string, ownerId: string) => {
+        const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_ENDPOINT}/user/info/${ownerId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            },
+        );
+        if (!response.ok) {
+            throw new Error("Failed to get owner email and name");
+        }
+        return await response.json();
+    }
 };
