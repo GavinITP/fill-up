@@ -1,40 +1,55 @@
 "use client";
 
-import CardWithImageHeader from "@/components/CardWithImageHeader";
-import SearchBar from "@/components/SearchBar";
+import CardWithImageHeader from "@/components/search-page/CardWithImageHeader";
+import SearchBar from "@/components/search-page/SearchBar";
 import axios from "axios";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
+import SkeletonCard from "@/components/search-page/SkeletonCard";
+
+interface WaterStation {
+  _id: string;
+  name: string;
+  isFree: boolean;
+  address: string;
+  waterTemperature: string[];
+  permission: string[];
+}
 
 const Home = () => {
   const { data: session } = useSession();
-  const API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/water-station/`;
-  const [waterStations, setWaterStations] = useState<unknown[]>([]);
-  const router = useRouter();
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get("search") || "";
 
   const fetchWaterStations = async (query: string) => {
-    const token = session?.user.token;
+    const token = session?.user?.token;
+    if (!token) return [];
 
-    try {
-      const response = await axios.get(
-        `${API_ENDPOINT}?name=${query}&approvalStatus=approved`,
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
-      setWaterStations(response.data.data || []);
-    } catch (error) {
-      console.error("Error fetching water stations:", error);
-    }
+    const API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/water-station/`;
+
+    const response = await axios.get(
+      `${API_ENDPOINT}?name=${query}&approvalStatus=approved`,
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+
+    return response.data.data || [];
   };
 
-  useEffect(() => {
-    fetchWaterStations("");
-  }, []);
-
+  const {
+    data: waterStations = [],
+    isError,
+    isLoading,
+    isFetched,
+  } = useQuery({
+    queryFn: () => fetchWaterStations(searchQuery),
+    queryKey: ["water-stations", searchQuery],
+  });
 
   return (
-    <div className="container mx-auto px-12 pt-10">
+    <div className="xl:max-w-screen mx-auto px-12 pt-10">
       <div className="mb-14 mt-4">
         <h1 className="text-center text-5xl font-black text-[#01579B]">
           Fill Up
@@ -45,16 +60,28 @@ const Home = () => {
         </p>
       </div>
 
-      <SearchBar search={fetchWaterStations} />
+      <SearchBar />
 
-      <div className="mt-16 grid grid-cols-1 items-center gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {waterStations.map((station) => (
-          <div
-            key={station._id}
-            onClick={() => {
-              router.push(`/water-station/${station._id}`);
-            }}
-          >
+      {isFetched && (
+        <p className="mt-4 text-sm text-gray-500">
+          {waterStations.length} results found{" "}
+        </p>
+      )}
+
+      <div className="mt-16 grid grid-cols-1 items-center gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+        {isLoading && (
+          <>
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+          </>
+        )}
+
+        {waterStations.map((station: WaterStation) => (
+          <Link key={station._id} href={`/water-station/${station._id}`}>
             <CardWithImageHeader
               name={station.name}
               isFree={station.isFree ? "ฟรี" : "เสียเงิน"}
@@ -62,11 +89,11 @@ const Home = () => {
               permission={station.permission}
               waterTemperature={station.waterTemperature}
             />
-          </div>
+          </Link>
         ))}
       </div>
 
-      {waterStations.length === 0 && (
+      {isFetched && waterStations.length === 0 && (
         <Image
           src="/images/waterStationNotFound.png"
           alt="Water station not found"
@@ -74,6 +101,10 @@ const Home = () => {
           width={300}
           height={300}
         />
+      )}
+
+      {isError && (
+        <p className="text-center text-red-500">Something went wrong!</p>
       )}
     </div>
   );

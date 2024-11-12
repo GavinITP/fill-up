@@ -5,6 +5,7 @@ import NavBar from "@/components/NavBar";
 import { getServerSession } from "next-auth";
 import NextAuthProvider from "@/providers/NextAuthProvider";
 import { authOptions } from "./api/auth/[...nextauth]/authOptions";
+import ReactQueryProvider from "@/providers/ReactQueryProvider";
 
 export const metadata: Metadata = {
   title: "Fill Up",
@@ -27,8 +28,10 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${notoSansThai.className}`}>
         <NextAuthProvider session={session}>
-          <NavBar />
-          {children}
+          <ReactQueryProvider>
+            <NavBar />
+            {children}
+          </ReactQueryProvider>
         </NextAuthProvider>
       </body>
     </html>

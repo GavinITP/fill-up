@@ -1,12 +1,20 @@
 import Image from "next/image";
 
-const CardWithImageHeader = ({
+interface Props {
+  name: string;
+  isFree: string;
+  address: string;
+  waterTemperature: string[];
+  permission: string[];
+}
+
+export default function CardWithImageHeader({
   name,
   isFree,
   address,
   waterTemperature,
   permission,
-}) => {
+}: Props) {
   return (
     <div className="overflow-hidden rounded-lg bg-white shadow-lg transition-transform duration-300 hover:scale-[1.02]">
       <Image
@@ -39,16 +47,19 @@ const CardWithImageHeader = ({
         </div>
 
         <div className="mt-4">
-          <p className="block text-xs text-gray-500">
+          <p className="flex items-center gap-2 text-xs text-gray-500">
             สำหรับ:{" "}
-            <span className="rounded-full bg-gray-200 px-2 py-1 text-black">
-              {permission}
-            </span>
+            {permission.map((permission) => (
+              <span
+                key={Math.random()}
+                className="rounded-full bg-gray-200 px-2 py-1 text-black"
+              >
+                {permission}
+              </span>
+            ))}
           </p>
         </div>
       </div>
     </div>
   );
-};
-
-export default CardWithImageHeader;
+}
