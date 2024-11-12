@@ -53,6 +53,7 @@ export const userService = {
     ownerId: string,
     identityCardNumber: string,
     telephoneNumber: string,
+    token: string,
   ) => {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_ENDPOINT}/user/register/owner`,
@@ -60,6 +61,7 @@ export const userService = {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
           ownerId: ownerId,

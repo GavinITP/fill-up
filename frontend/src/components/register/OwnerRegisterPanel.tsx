@@ -16,6 +16,7 @@ export default function OwnerRegisterPanel() {
       session.user._id,
       tel,
       citizenId,
+      session.user.token
     );
     if (response.success) {
       window.location.href = "/";

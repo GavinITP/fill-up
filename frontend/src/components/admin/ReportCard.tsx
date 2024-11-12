@@ -4,15 +4,50 @@ import { useState } from "react";
 import BaseCardWithButton from "../BaseCardWithButton";
 import Button, { ButtonProps } from "../Button";
 import BaseModalWithInput from "../BaseModalWithInput";
+import { adminService } from "@/api/admin-service";
+import { useSession } from "next-auth/react";
 
-export default function ReportCard(props: {
-  waterStationName: string;
-  date: string;
-  details: string;
-}) {
+export interface ReportCardProps {
+  id: string;
+  stationId: string;
+  stationName: string;
+  name: string;
+  description: string;
+  createdAt: string;
+  completed: string;
+}
+
+export default function ReportCard({
+  id,
+  stationId,
+  stationName,
+  name,
+  createdAt,
+  description
+}: ReportCardProps) {
+  const { data: session } = useSession();
+  const token = session?.user.token;
+
   const [isDetailOpened, setIsDetailOpened] = useState(false);
   const [isReportOpened, setIsReportOpened] = useState(false);
   const [reportComment, setReportComment] = useState("");
+
+  const markReport = async (reportId: string, completed: boolean) => {
+    try {
+      await adminService.markReport(token, reportId, completed);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error marking reports:", error);
+    }
+  }
+
+  const sendAdminNote = async (stationId: string, note: string) => {
+    try {
+      await adminService.sendAdminNote(token, stationId, note);
+    } catch (error) {
+      console.error("Error sending comment:", error);
+    }
+  }
 
   const buttonList: ButtonProps[] = [
     {
@@ -27,7 +62,7 @@ export default function ReportCard(props: {
       color: "green",
       label: "ไม่พบปัญหา",
       onClick: () => {
-        alert("no problem found");
+        markReport(id, true);
       },
       isBold: true,
     },
@@ -47,23 +82,23 @@ export default function ReportCard(props: {
         <div className="flex w-4/5 flex-col items-start justify-start gap-6 px-4 py-6">
           <div>
             <h4 className="text-xl font-bold text-black">
-              ข้อร้องเรียนตู้กดน้ำ {props.waterStationName}
+              ข้อร้องเรียนตู้กดน้ำ {stationName} : {name}
             </h4>
             <div className="text-base font-normal text-zinc-500">
-              วันที่ร้องเรียน: {props.date}
+              วันที่ร้องเรียน: {createdAt}
             </div>
           </div>
 
           <span className="line-clamp-3 text-base font-normal text-zinc-500">
-            {props.details}
+            {description}
           </span>
         </div>
       </BaseCardWithButton>
       <BaseModalWithInput
         color="blue"
         title={"ข้อร้องเรียน"}
-        instruction={`ปัญหาที่พบเกี่ยวกับตู้กดน้ำ ${props.waterStationName}`}
-        textInput={props.details}
+        instruction={`ปัญหาที่พบเกี่ยวกับตู้กดน้ำ ${stationName}`}
+        textInput={description}
         disabled={true}
         isOpened={isDetailOpened}
         onClose={() => {
@@ -84,7 +119,7 @@ export default function ReportCard(props: {
       <BaseModalWithInput
         color="red"
         title={"บันทึกการตรวจสอบ"}
-        instruction={`ระบุปัญหาที่ตรวจพบเกี่ยวกับตู้กดน้ำ ${props.waterStationName}`}
+        instruction={`ระบุปัญหาที่ตรวจพบเกี่ยวกับตู้กดน้ำ ${stationName}`}
         textInput={reportComment}
         disabled={false}
         isOpened={isReportOpened}
@@ -111,7 +146,8 @@ export default function ReportCard(props: {
               label="จัดการปัญหา"
               onClick={() => {
                 setIsReportOpened(false);
-                alert(reportComment);
+                markReport(id, true);
+                sendAdminNote(stationId, reportComment);
                 setReportComment("");
               }}
               isBold={true}

@@ -79,12 +79,20 @@ const verifyOwner = async (req: Request, res: Response) => {
   if (!result.success) return res.status(400).json(result);
   console.log('Owner verified');
   res.status(200).json({ success: true });
-}
+};
+
+const getUserEmailAndName = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const result = await userService.getUserEmailAndName(id);
+  if (!result.success) return res.status(400).json(result);
+  res.status(200).json(result);
+};
 
 export const userController = {
   loginUser,
   registerUser,
   registerOwner,
   getOwnerRequests,
-  verifyOwner
+  verifyOwner,
+  getUserEmailAndName
 };

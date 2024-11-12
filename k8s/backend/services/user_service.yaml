@@ -58,6 +58,12 @@ spec:
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
+
+            -- Create admin user
+            INSERT INTO USER_TABLE (name, email, password, user_type) VALUES ('admin', 'admin@admin.com', '$2b$10$SyRC8WjlperGE9ujjHrsxegtJs4vorvElHTTrioRoQ0VOLZ8erkRO', 'ADMIN');
+
+            -- Create user
+            INSERT INTO USER_TABLE (name, email, password, user_type) VALUES ('user', 'user@user.com', '$2b$10$SyRC8WjlperGE9ujjHrsxegtJs4vorvElHTTrioRoQ0VOLZ8erkRO', 'USER');
           EOSQL
       containers:
         - name: user-service

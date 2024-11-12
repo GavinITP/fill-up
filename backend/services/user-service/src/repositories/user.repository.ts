@@ -77,4 +77,12 @@ export const userRepository = {
 
     return verifiedOwner.rows[0];
   },
+
+  findUserById: async (id: string) => {
+    const user = await db.query<UserSchema>(
+      `SELECT email, name FROM user_table WHERE user_id = $1`,
+      [id]
+    );
+    return user.rows[0];
+  }
 };

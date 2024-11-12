@@ -110,4 +110,17 @@ export const userService = {
       message: isSuccess ? 'success' : 'error to verify owner',
     };
   },
+
+  getUserEmailAndName: async (id: string) => {
+    const user = await userRepository.findUserById(id);
+    if (user === undefined) {
+      return { success: false, message: "Cannot find user" };
+    }
+    return {
+      success: true,
+      message: 'success',
+      email: user?.email,
+      name: user?.name,
+    };
+  }
 };

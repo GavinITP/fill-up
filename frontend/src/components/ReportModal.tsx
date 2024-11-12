@@ -87,7 +87,6 @@ export default function ReportModal(stationId: string, stationName: string) {
                   }
                   const res = createReport(
                     stationId,
-                    stationName,
                     name,
                     description,
                   );
